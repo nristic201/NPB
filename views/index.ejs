@@ -12,7 +12,7 @@
 </form><br>
 <% } else { %>
 	<!--<button onclick="Logout()">Logout</button> -->
-	<button action='/profile'>View Profile</button>
+	<button action>View Profile</button>
 <% } %> 
 <form method="POST" action="/search">
 	<h2>SEARCH</h2>
@@ -23,11 +23,11 @@
     <input type="submit" name="search" title="search">
 </form>
 
-<% if(kriterijum === 'knjige') { %>
+<% if(kriterijum === 'knjige') { %> 
 	<h3>knjige:</h3>
 	<ul>
-		<% array.forEach(function(knjiga) { %>
-			<li><%= knjiga.naziv %></li>
+		<% array.forEach(function(knjiga) { %> 
+			<li><%= knjiga.naziv %></li> <!--/knjiga?naziv=asd-->
 		<% }) %>
 	</ul>
 <% } %>
@@ -35,7 +35,7 @@
 	<h3>pisci:</h3>
 	<ul>
 		<% array.forEach(function(pisac) { %>
-			<li><%= pisac.ime %> <%= pisac.prezime %></li>
+			<li><%= pisac.ime %> <%= pisac.prezime %></li> <!--/pisac?imePisca=asd&prezimePisca=asd-->
 		<% }) %>6
 	</ul>
 <% } %>
@@ -43,7 +43,7 @@
 	<h3>biblioteke:</h3>
 	<ul>
 		<% array.forEach(function(bibl) { %>
-			<li><%= bibl.ime %></li>
+			<li><%= bibl.ime %></li> <!--/biblioteka?imeBiblioteke=asdasd-->
 		<% }) %>
 	</ul>
 <% } %>

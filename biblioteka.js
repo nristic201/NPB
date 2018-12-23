@@ -15,5 +15,8 @@ class Biblioteka
     get knjige_biblioteke() {
         return this.knjige;
     }
+    addBook(knjiga) {
+        this.knjige.push(knjiga);
+    }
 }
 module.exports = Biblioteka;

@@ -5,6 +5,8 @@ class Korisnik
         this.prezime = prezime;
         this.username = un;
         this.password = pw;
+        this.prijatelji = [];
+        this.iznajmljene_knjige = [];
     }
     get ime_korisnika() {
         return this.ime;
@@ -17,6 +19,24 @@ class Korisnik
     }
     get password_korisnika() {
         return this.password;
+    }
+    set prijatelji_korisnika(prijatelji) {
+        this.prijatelji = prijatelji;
+    }
+    get prijatelji_korisnika() {
+        return this.prijatelji;
+    }
+    addFriend(prijatelj) {
+        this.prijatelji.push(prijatelj);
+    }  
+    set knjige_korisnika(knjige) {
+        this.iznajmljene_knjige = knjige;
+    }
+    get knjige_korisnika() {
+        return this.iznajmljene_knjige;
+    }
+    addBook(knjiga) {
+        this.iznajmljene_knjige.push(knjiga);
     }
 }
 module.exports = Korisnik;
