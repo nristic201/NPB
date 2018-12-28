@@ -19,6 +19,7 @@
 	<input type="radio" name="kriterijum" value="knjige" checked><label>knjige</label><br>
 	<input type="radio" name="kriterijum" value="pisci"><label>pisci</label><br>
 	<input type="radio" name="kriterijum" value="biblioteke"><label>biblioteke</label><br>
+	<input type="radio" name="kriterijum" value="korisnici"><label>korisnici</label><br>
     <input type="text" name="value"><br>
     <input type="submit" name="search" title="search">
 </form>
@@ -44,6 +45,14 @@
 	<ul>
 		<% array.forEach(function(bibl) { %>
 			<li><%= bibl.ime %></li> <!--/biblioteka?imeBiblioteke=asdasd-->
+		<% }) %>
+	</ul>
+<% } %>
+<% if(kriterijum === 'korisnici') { %>
+	<h3>korisnici:</h3>
+	<ul>
+		<% array.forEach(function(user) { %>
+			<li><%= user.ime %></li> <!--/biblioteka?imeBiblioteke=asdasd-->
 		<% }) %>
 	</ul>
 <% } %>

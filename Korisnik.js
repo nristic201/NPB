@@ -5,7 +5,8 @@ class Korisnik
         this.prezime = prezime;
         this.username = un;
         this.password = pw;
-        this.prijatelji = [];
+        this.followees = [];
+        this.followers = [];
         this.iznajmljene_knjige = [];
     }
     get ime_korisnika() {
@@ -20,15 +21,24 @@ class Korisnik
     get password_korisnika() {
         return this.password;
     }
-    set prijatelji_korisnika(prijatelji) {
-        this.prijatelji = prijatelji;
+    set followees_korisnika(followees) {
+        this.followees = followees;
     }
-    get prijatelji_korisnika() {
-        return this.prijatelji;
+    get followees_korisnika() {
+        return this.followees;
     }
-    addFriend(prijatelj) {
-        this.prijatelji.push(prijatelj);
+    addFollowee(followee) {
+        this.followees.push(followee);
     }  
+    set followers_korisnika(followers) {
+        this.followers = followers;
+    }
+    get followers_korisnika() {
+        return this.followers;
+    }
+    addFollower(follower) {
+        this.followers.push(follower);
+    }
     set knjige_korisnika(knjige) {
         this.iznajmljene_knjige = knjige;
     }

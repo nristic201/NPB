@@ -61,20 +61,30 @@ app.post('/register',function(req, res) {
 		})
 });
 
-// app.get('/addFriend', function(req, res) {
+app.get('/addFollowee', function(req, res) { //addFolloweeeeeeeeeeeeeee?username=NekiUsername
 
-// 	let un_prijatelja = req.query.username;
+	let followeeUsername = res.query.username;
+	session
+		.run("match (a:Korisnik {username: {usernameParam}}), (b:Korisnik {username: {followeeParam}}) merge (a)-[r:Prati]->(b) return r, b",
+		)
+		.then(function(result) {
+			if(result.records._fields[0]!=null) {
+				console.log("Uspesno zapracen korisink");
+				let ime_followee = result.records._fields[1].properties.ime;
+				let prezime_followee = result.records._fields[1].properties.prezime;
+				followee = new Korisnik(ime_followee, prezime_followee, followeeUsername, "");
+				korisnik.addFollowee(followee);
+			}
+			else {
+				console.log("Fail");
+			}
+		})
+		.catch(function(err) {
+			console.log(err);
+		})
+});
 
-// 	session
-// 		.run('MATCH (a:Korisnik),(b:Korisnik) WHERE a.username = {myUsernameParam} AND b.username = {friendUsernameParam} CREATE (a)-[r:Prijatelj]->(b) RETURN r')
-// 		.then(function(result){
-// 			let prijatelj = result.records[0]._fields[0].username;
-// 			korisnik.addFriend(prijatelj);
-// 		})
-// 		.catch()
-// });
-
-app.get('/pisac', function(req, res){ //  /pisac?imePisca=Kristijan&prezimePisca=Andersen
+app.get('/pisac', function(req, res) { //  /pisac?imePisca=Kristijan&prezimePisca=Andersen
 
 	let imePisca = req.query.imePisca;
 	let prezimePisca = req.query.prezimePisca;
@@ -124,12 +134,12 @@ app.get('/pisac', function(req, res){ //  /pisac?imePisca=Kristijan&prezimePisca
 
 });
 
-app.get('/logout', function(res,req){
+app.get('/logout', function(res, req) {
 	status = false;
 	korisnik = null;
 });
 
-app.post('/login', function(req, res){
+app.post('/login', function(req, res) {
 
 	username = req.body.username;
 	password = req.body.password;
@@ -168,7 +178,7 @@ app.post('/login', function(req, res){
 		});
 });
 
-app.post('/search', function(req, res){
+app.post('/search', function(req, res) {
 
 	kriterijum = req.body.kriterijum;
 	let value = req.body.value;
@@ -223,7 +233,7 @@ app.post('/search', function(req, res){
 			console.log(error);
 		});
 	}
-	else {
+	else if(kriterijum === "biblioteke"){
 
 		session
 		.run('match(n:Biblioteka) where n.ime =~ {biblParam} return n', {biblParam:'.*' + value + '.*'})
@@ -233,6 +243,31 @@ app.post('/search', function(req, res){
 				arrray.push({
 					id: record._fields[0].identity.low,
 					ime: record._fields[0].properties.ime
+				});
+			});
+			res.render('index', {
+				status: status,
+				array: arrray,
+				kriterijum: kriterijum
+			});
+
+			session.close();
+		})
+		.catch(function(error){
+			console.log(error);
+		});
+	}
+	else if(kriterijum === "korisnici") {
+		session
+		.run('match(n:Korisnik) where n.ime =~ {korisnikParam} return n', {korisnikParam:'.*' + value + '.*'})
+		.then(function(result) {
+
+			result.records.forEach(function(record){
+				arrray.push({
+					id: record._fields[0].identity.low,
+					ime: record._fields[0].properties.ime,
+					prezime: record._fields[0].properties.prezime,
+					username: record._fields[0].properties.username
 				});
 			});
 			res.render('index', {
@@ -317,8 +352,6 @@ app.get('/knjiga', function(req, res) { // knjiga?naziv=Crvenkapa
 
 app.get('/profile', function(req, res) { 
 
-	let korisnikoveKnjige = [];
-	let korisnikoviPrijatelji = [];
 	session
 		.run("match (n:Korisnik {username: {usernameParam}, password: {passwordParam}})-[r:Iznajmio]-(k:Knjiga) return k, r", 
 		 {usernameParam: korisnik.username_korisnika,
@@ -356,17 +389,33 @@ app.get('/profile', function(req, res) {
 		});
 
 	session
-		.run("match (a:Korisnik {username: {usernameParam}})-[r:Prijatelj]->(b:Korisnik) return b", 
+		.run("match (a:Korisnik {username: {usernameParam}})-[r:Prati]->(b:Korisnik) return b", 
 		{usernameParam: korisnik.username_korisnika})
 		.then(function (result) {
 			result.records.forEach(function(record){
-				let ime_prijatelja = record._fields[0].properties.ime;
-				let prezime_prijatelja = record._fields[0].properties.prezime;
-				let username_prijatelja = record._fields[0].properties.username;
-				let prijatelj = new Korisnik(ime_prijatelja,prezime_prijatelja, username_prijatelja, "");
-				korisnik.addFriend(prijatelj);
+				let ime_followee = record._fields[0].properties.ime;
+				let prezime_followee = record._fields[0].properties.prezime;
+				let username_followee = record._fields[0].properties.username;
+				let followee = new Korisnik(ime_followee,prezime_followee, username_followee, "");
+				korisnik.addFollowee(followee);
 			})
-			console.log(korisnik);
+			console.log(followee);
+		})	
+		.catch(function(err) {
+			console.log(err);
+		})
+	session
+		.run("match (a:Korisnik)-[r:Prati]->(b:Korisnik {username: {usernameParam}}) return a", 
+		{usernameParam: korisnik.username_korisnika})
+		.then(function (result) {
+			result.records.forEach(function(record){
+				let ime_follower = record._fields[0].properties.ime;
+				let prezime_follower = record._fields[0].properties.prezime;
+				let username_follower = record._fields[0].properties.username;
+				let follower = new Korisnik(ime_follower,prezime_follower, username_follower, "");
+				korisnik.addFollowee(follower);
+			})
+			console.log(follower);
 		})	
 		.catch(function(err) {
 			console.log(err);
