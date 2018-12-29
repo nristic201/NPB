@@ -8,6 +8,7 @@ class Korisnik
         this.followees = [];
         this.followers = [];
         this.iznajmljene_knjige = [];
+        this.biblioteke = [];
     }
     get ime_korisnika() {
         return this.ime;
@@ -26,6 +27,15 @@ class Korisnik
     }
     get followees_korisnika() {
         return this.followees;
+    }
+    set biblioteke_korisnika(bibil) {
+        this.biblioteke = bibl;
+    }
+    get biblioteke_korisnika() {
+        return this.biblioteke;
+    }
+    addBiblioteka(bibl) {
+        this.biblioteke.push(bibl);
     }
     addFollowee(followee) {
         this.followees.push(followee);

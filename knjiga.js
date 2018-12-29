@@ -1,10 +1,12 @@
 class Knjiga {
 
-    constructor(id, naziv, sifra, iznajmljena, datum_izn) {
+    constructor(id, naziv, izdanje, broj_kopija, iznajmljena, zanr, datum_izn) {
         this.id = id;
         this.naziv = naziv;
-        this.sifra = sifra;
         this.iznajmljena = iznajmljena;
+        this.zanr = zanr;
+        this.izdanje = izdanje;
+        this.broj_kopija = broj_kopija;
 
         if(this.iznajmljena.localeCompare("da") == 0)
             this.datum_iznajmljivanja = datum_izn;
@@ -45,6 +47,27 @@ class Knjiga {
     get biblioteka_knjige() {
         return this.biblioteka;
     }
+    set zanr_knjige(zanr) {
+        this.zanr = zanr;
+    }
 
+    get zanr_knjige() {
+        return this.zanr;
+    }
+    set izdanje_knjige(izdanje) {
+        this.izdanje = izdanje;
+    }
+
+    get izdanje_knjige() {
+        return this.izdanje;
+    }
+    set broj_kopija_knjige(broj_kopija) {
+        this.broj_kopija = broj_kopija;
+    }
+
+    get broj_kopija_knjige() {
+        return this.broj_kopija;
+    }
+    
 }
 module.exports = Knjiga;

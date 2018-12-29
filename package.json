@@ -12,8 +12,11 @@
     "body-parser": "*",
     "ejs": "^2.6.1",
     "express": "*",
+    "express-handlebars": "^3.0.0",
+    "method-override": "^3.0.0",
     "morgan": "*",
     "neo4j-driver": "*",
+    "redis": "^2.8.0",
     "underscore": "^1.9.1"
   }
 }
