@@ -28,7 +28,7 @@ class Korisnik
     get followees_korisnika() {
         return this.followees;
     }
-    set biblioteke_korisnika(bibil) {
+    set biblioteke_korisnika(bibl) {
         this.biblioteke = bibl;
     }
     get biblioteke_korisnika() {

@@ -1,6 +1,6 @@
 <h1>NASA BIBLIOTEKICA</h1>
-
-<% if (!status) { %>
+<!--
+<% if (false) { %>
 <form method="POST" action="/login">
     <h2>LOGIN</h2>
     <label>username:</label><br>
@@ -11,7 +11,6 @@
 	<label>status: <% if(status) { %> Ulogovani ste <% } else { %> Niste ulogovani <% } %></label><br>
 </form><br>
 <% } else { %>
-	<!--<button onclick="Logout()">Logout</button> -->
 	<button action>View Profile</button>
 <% } %> 
 <form method="POST" action="/search">
@@ -22,13 +21,14 @@
 	<input type="radio" name="kriterijum" value="korisnici"><label>korisnici</label><br>
     <input type="text" name="value"><br>
     <input type="submit" name="search" title="search">
-</form>
+</form>-->
 
+<!--
 <% if(kriterijum === 'knjige') { %> 
 	<h3>knjige:</h3>
 	<ul>
 		<% array.forEach(function(knjiga) { %> 
-			<li><%= knjiga.naziv %></li> <!--/knjiga?naziv=asd-->
+			<li><%= knjiga.naziv %></li> 
 		<% }) %>
 	</ul>
 <% } %>
@@ -36,7 +36,7 @@
 	<h3>pisci:</h3>
 	<ul>
 		<% array.forEach(function(pisac) { %>
-			<li><%= pisac.ime %> <%= pisac.prezime %></li> <!--/pisac?imePisca=asd&prezimePisca=asd-->
+			<li><%= pisac.ime %> <%= pisac.prezime %></li> 
 		<% }) %>6
 	</ul>
 <% } %>
@@ -44,7 +44,7 @@
 	<h3>biblioteke:</h3>
 	<ul>
 		<% array.forEach(function(bibl) { %>
-			<li><%= bibl.ime %></li> <!--/biblioteka?imeBiblioteke=asdasd-->
+			<li><%= bibl.ime %></li> 
 		<% }) %>
 	</ul>
 <% } %>
@@ -52,7 +52,8 @@
 	<h3>korisnici:</h3>
 	<ul>
 		<% array.forEach(function(user) { %>
-			<li><%= user.ime %></li> <!--/biblioteka?imeBiblioteke=asdasd-->
+			<li><%= user.ime %></li> 
 		<% }) %>
 	</ul>
 <% } %>
+-->
