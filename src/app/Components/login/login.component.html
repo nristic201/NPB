@@ -1,0 +1,15 @@
+<div class="loginForm" fxLayout="column" fxLayoutAlign="center center">
+  <h1 mat-line> Dobrodosli u Biblioteku</h1>
+  <h2 mat-line>Unesite svoje podatke</h2>
+  <form>
+    <mat-form-field  appearance='outline' fxLayout="row" fxLayoutAlign="center start" class="line">
+        <mat-label>Username</mat-label>
+        <input matInput name="username" placeholder="username" required autocomplete="off">
+    </mat-form-field>
+    <mat-form-field appearance='outline' fxLayout="row" fxLayoutAlign="center start" fxLayoutGap="gappx">
+        <mat-label>Password</mat-label>
+      <input matInput name="password" placeholder="password" fxLayoutAlign="center start" required autocomplete="off">
+    </mat-form-field>
+    <button mat-raised-button primary fxLayoutAlign="center start">Login</button>
+  </form>
+</div>
