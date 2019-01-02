@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Korisnik } from 'src/app/models/Korisnik';
 import { AuthService } from 'src/app/Services/auth.service';
+import { FormGroup, FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-login',
@@ -8,15 +9,15 @@ import { AuthService } from 'src/app/Services/auth.service';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
-
-  public user:Korisnik= new Korisnik();
+    public username: string;
+    public  password: string;
   constructor(
-    private authService:AuthService
+    private authService: AuthService
   ) { }
 
   ngOnInit() {
   }
   loginReq(){
-    this.authService.login(this.user)
+    this.authService.login(this.username,this.password)
   }
 }

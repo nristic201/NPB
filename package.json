@@ -3,11 +3,11 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve --watch",
-    "build": "ng build",
+    "start": "ng build && nodemon server.js",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "tsc": "tsc"
   },
   "private": true,
   "dependencies": {
@@ -38,6 +38,7 @@
     "@types/node": "~8.9.4",
     "body-parser": "*",
     "codelyzer": "~4.5.0",
+    "cors": "^2.8.5",
     "ejs": "^2.6.1",
     "express": "*",
     "jasmine-core": "~2.99.1",
@@ -51,9 +52,9 @@
     "neo4j-driver": "*",
     "nodemon": "^1.18.9",
     "protractor": "~5.4.0",
-    "ts-node": "~7.0.0",
+    "ts-node": "^7.0.1",
     "tslint": "~5.11.0",
-    "typescript": "~3.1.6",
+    "typescript": "^3.1.6",
     "underscore": "^1.9.1"
   }
 }
