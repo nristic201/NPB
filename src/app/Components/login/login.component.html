@@ -12,5 +12,5 @@
     </mat-form-field>
     <button mat-raised-button primary fxLayoutAlign="center start" type="submit">Login</button>
   </form>
-  {{password}}  -- {{username}}
+  <mat-error>{{authService.error_msg}}</mat-error>
 </div>

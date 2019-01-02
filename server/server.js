@@ -175,7 +175,7 @@ app.post('/login', function (req, res) {
   //   });
 });
 
-app.post('/search', function (req, res) {
+app.get('/search', function (req, res) {
 
   kriterijum = req.body.kriterijum;
   let value = req.body.value;
@@ -329,7 +329,7 @@ app.get('/knjiga', function (req, res) { // knjiga?naziv=Crvenkapa
     })
 });
 
-app.get('/profile', function (req, res) {
+app.get('/profile/:username', function (req, res) {
 
   let korisnikoveKnjige = [];
   let korisnikoviPrijatelji = [];

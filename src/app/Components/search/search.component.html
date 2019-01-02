@@ -1,0 +1,18 @@
+<div class="searchComp" fxLayout="column">
+  <form class="searchForm">
+    <mat-form-field>
+      <mat-select [(value)]="criteria" placeholder='criteria'>
+        <mat-option value="Knjiga">Knjiga</mat-option>
+        <mat-option value="Pisac">Pisac</mat-option>
+        <mat-option value="Biblioteka">Biblioteka</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput placeholder='search' name='search_value' [(ngModel)]='search_value'>
+    </mat-form-field>
+    <button mat-button (click)='searchForIt()'>GO</button>
+  </form>
+  <div *ngIf='data$ | async' class="search_results">
+    ima necega
+  </div>
+</div>

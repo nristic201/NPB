@@ -11,12 +11,18 @@ import { HomeComponent } from "./Components/home/home.component";
 import { FlexLayoutModule } from "@angular/flex-layout";
 import { HttpClientModule } from "@angular/common/http";
 import { ReactiveFormsModule, FormsModule } from "@angular/forms";
+import { BestRatedBooksComponent } from './Components/best-rated-books/best-rated-books.component';
+import { SearchComponent } from './Components/search/search.component';
+import { ProfileComponent } from './Components/profile/profile.component';
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
     RegisterComponent,
-    HomeComponent
+    HomeComponent,
+    BestRatedBooksComponent,
+    SearchComponent,
+    ProfileComponent
   ],
   imports: [
     BrowserModule,
