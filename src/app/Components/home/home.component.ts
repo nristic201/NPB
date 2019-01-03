@@ -12,18 +12,9 @@ import { AuthService } from 'src/app/Services/auth.service';
   styleUrls: ["./home.component.css"]
 })
 export class HomeComponent implements OnInit {
-  @ViewChild("sidenav") public sidenav: MatSidenav;
-
-  constructor(public router: Router,
-    private authService:AuthService) {}
+ 
+  constructor() {}
 
   ngOnInit() {}
-    
   
-  public open() {
-    return this.sidenav.open();
-  }
-  public close() {
-    return this.sidenav.close();
-  }
 }

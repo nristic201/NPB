@@ -21,7 +21,7 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'dist/NBP/index.html'));
 });
 
-app.post('/api/login', (req, res) => {
+app.post('/login', (req, res) => {
 
     const username = req.body.username;
     const password = req.body.password;
@@ -33,12 +33,11 @@ app.post('/api/login', (req, res) => {
         })
         .then(parser.parse)
         .then(parsed => {
-            if(parsed.length===0){
+            if (parsed.length === 0) {
                 res.json({
-                    error:'invalid data'
+                    error: 'invalid data'
                 })
-            }
-            else{
+            } else {
                 res.json(parsed[0]);
             }
             session.close();
@@ -48,7 +47,7 @@ app.post('/api/login', (req, res) => {
         });
 });
 
-app.get('/api/fetchbooks', (req, res) => {
+app.get('/fetchbooks', (req, res) => {
     console.log('dal')
     session.run('match (k:Knjiga) return k')
         .then(parser.parse)
@@ -59,74 +58,68 @@ app.get('/api/fetchbooks', (req, res) => {
 
 
 app.get('/profile/:username', function (req, res) {
-
-    let korisnikoveKnjige = [];
-    let korisnikoviPrijatelji = [];
+    let username= req.params.username;
+    let obj = {};
     session
-      .run("match (n:Korisnik {username: {usernameParam}, password: {passwordParam}})-[r:Iznajmio]-(k:Knjiga) return k, r", {
-        usernameParam: korisnik.username_korisnika,
-        passwordParam: korisnik.password_korisnika
-      })
-  
-      .then(function (result) {
-        result.records.forEach(function (record) {
-  
-          let id = record._fields[0].identity.low;
-          let naziv_knjige = record._fields[0].properties.naziv;
-          let sifra = record._fields[0].properties.sifra;
-          let datum_iznajmljivanja = record._fields[1].properties.datum;
-  
-          let knjiga = new Knjiga(id, naziv_knjige, sifra, "da", datum_iznajmljivanja);
-  
-          session
-            .run("match (b:Knjiga {naziv:{nazivParam}})-[r:Napisao]-(a) return a", {
-              nazivParam: naziv_knjige
-            })
-            .then(function (result) {
-              let imePisca = result.records[0]._fields[0].properties.ime;
-              let prezimePisca = result.records[0]._fields[0].properties.prezime;
-              let pisac = new Pisac(imePisca, prezimePisca);
-              knjiga.pisac_knjige = pisac;
-            })
-            .catch(function (err) {
-              console.log(err);
-            })
-          korisnik.addBook(knjiga);
+        .run("match (n:Korisnik {username: {usernameParam}})-[r:Iznajmio]-(k:Knjiga) return k, r", {
+            usernameParam: username
         })
-  
-  
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-  
-    session
-      .run("match (a:Korisnik {username: {usernameParam}})-[r:Prijatelj]->(b:Korisnik) return b", {
-        usernameParam: korisnik.username_korisnika
-      })
-      .then(function (result) {
-        result.records.forEach(function (record) {
-          let ime_prijatelja = record._fields[0].properties.ime;
-          let prezime_prijatelja = record._fields[0].properties.prezime;
-          let username_prijatelja = record._fields[0].properties.username;
-          let prijatelj = new Korisnik(ime_prijatelja, prezime_prijatelja, username_prijatelja, "");
-          korisnik.addFriend(prijatelj);
-        })
-        console.log(korisnik);
-      })
-      .catch(function (err) {
-        console.log(err);
-      })
-  
-    res.render('profile.ejs', {
-      korisnik: korisnik, //korisnik ima i username, pw, ime, prez, 
-      //sve knjige koje je iznajmio(naziv, datum_iznajmljivanja, pisac) i sve svoje prijatelje
-    });
-  
-  });
-  
+        .then(parser.parse)
+        .then((result)=>{
+            res.json(result)
+            // result.records.forEach(function (record) {
 
-app.post('/api/search', function (req, res) {
+            //     let id = record._fields[0].identity.low;
+            //     let naziv_knjige = record._fields[0].properties.naziv;
+            //     let sifra = record._fields[0].properties.sifra;
+            //     let datum_iznajmljivanja = record._fields[1].properties.datum;
+
+            //     let knjiga = new Knjiga(id, naziv_knjige, sifra, "da", datum_iznajmljivanja);
+
+            //     session
+            //         .run("match (b:Knjiga {naziv:{nazivParam}})-[r:Napisao]-(a) return a", {
+            //             nazivParam: naziv_knjige
+            //         })
+            //         .then(function (result) {
+            //             let imePisca = result.records[0]._fields[0].properties.ime;
+            //             let prezimePisca = result.records[0]._fields[0].properties.prezime;
+            //             let pisac = new Pisac(imePisca, prezimePisca);
+            //             knjiga.pisac_knjige = pisac;
+            //         })
+            //         .catch(function (err) {
+            //             console.log(err);
+            //         })
+            //     korisnik.addBook(knjiga);
+            // })
+
+
+        })
+        .catch(function (error) {
+            console.log('no user with that username ...');
+        });
+
+    // session
+    //     .run("match (a:Korisnik {username: {usernameParam}})-[r:Prijatelj]->(b:Korisnik) return b", {
+    //         usernameParam: korisnik.username_korisnika
+    //     })
+    //     .then(function (result) {
+    //         result.records.forEach(function (record) {
+    //             let ime_prijatelja = record._fields[0].properties.ime;
+    //             let prezime_prijatelja = record._fields[0].properties.prezime;
+    //             let username_prijatelja = record._fields[0].properties.username;
+    //             let prijatelj = new Korisnik(ime_prijatelja, prezime_prijatelja, username_prijatelja, "");
+    //             korisnik.addFriend(prijatelj);
+    //         })
+    //         console.log(korisnik);
+    //     })
+    //     .catch(function (err) {
+    //         console.log(err);
+    //     })
+
+});
+
+
+app.post('/search', function (req, res) {
 
     let criteria = req.body.criteria;
     let value = req.body.value;
@@ -137,7 +130,7 @@ app.post('/api/search', function (req, res) {
                 nazivParam: '.*(?i)' + value + '.*'
             })
             .then(parser.parse)
-            .then(result=>{
+            .then(result => {
                 res.json(result)
             })
             // .then(function (result) {

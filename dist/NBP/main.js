@@ -5,21 +5,33 @@
   !*** ./src/$$_lazy_route_resource lazy namespace object ***!
   \**********************************************************/
 /*! no static exports found */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
-function webpackEmptyAsyncContext(req) {
-	// Here Promise.resolve().then() is used instead of new Promise() to prevent
-	// uncaught exception popping up in devtools
-	return Promise.resolve().then(function() {
-		var e = new Error("Cannot find module '" + req + "'");
-		e.code = 'MODULE_NOT_FOUND';
-		throw e;
+var map = {
+	"./Components/profile/profile.module": [
+		"./src/app/Components/profile/profile.module.ts",
+		"Components-profile-profile-module"
+	]
+};
+function webpackAsyncContext(req) {
+	var ids = map[req];
+	if(!ids) {
+		return Promise.resolve().then(function() {
+			var e = new Error("Cannot find module '" + req + "'");
+			e.code = 'MODULE_NOT_FOUND';
+			throw e;
+		});
+	}
+	return __webpack_require__.e(ids[1]).then(function() {
+		var id = ids[0];
+		return __webpack_require__(id);
 	});
 }
-webpackEmptyAsyncContext.keys = function() { return []; };
-webpackEmptyAsyncContext.resolve = webpackEmptyAsyncContext;
-module.exports = webpackEmptyAsyncContext;
-webpackEmptyAsyncContext.id = "./src/$$_lazy_route_resource lazy recursive";
+webpackAsyncContext.keys = function webpackAsyncContextKeys() {
+	return Object.keys(map);
+};
+webpackAsyncContext.id = "./src/$$_lazy_route_resource lazy recursive";
+module.exports = webpackAsyncContext;
 
 /***/ }),
 
@@ -105,7 +117,7 @@ module.exports = ".main-content{\n    height: 100vh;\n}\n\n/*# sourceMappingURL=
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"toolbar\" fxLayout=\"row\">\n  <mat-toolbar color=\"primary\" *ngIf='!authService.isLogged'>\n    <mat-toolbar-row>\n      <button mat-button (click)=\"sidenav.open()\">Biblioteka</button>\n      <span class=\"spacer\"></span>\n      <button mat-button [routerLink]=\"['login']\">Login</button>\n      <button mat-button [routerLink]=\"['register']\">Register</button>\n    </mat-toolbar-row>\n  </mat-toolbar>\n  <mat-toolbar color='primary' *ngIf='authService.isLogged'>\n    <mat-toolbar-row>\n      <button mat-button (click)=\"sidenav.open()\">Biblioteka</button>\n      <span class=\"spacer\"></span>\n      <button mat-button [routerLink]=\"['/profile']\">{{authService.user.username}}</button>\n      <button mat-button>news</button>\n    </mat-toolbar-row>\n  </mat-toolbar>\n</div>\n<mat-sidenav-container class=\"example-container\" (backdropClick)=\"close('backdrop')\">\n  <mat-sidenav #sidenav (keydown.escape)=\"close('escape')\" disableClose>\n    <p><button mat-button (click)=\"close('toggle button')\">Toggle</button></p>\n  </mat-sidenav>\n\n  <mat-sidenav-content>\n    <div fxFlex class=\"main-content\">\n      <app-search></app-search>\n      <router-outlet></router-outlet>\n      <app-best-rated-books></app-best-rated-books>\n    </div>\n  </mat-sidenav-content>\n</mat-sidenav-container>"
+module.exports = "<div fxFlex class=\"main-content\">\n  <app-search></app-search>\n  <app-best-rated-books></app-best-rated-books>\n</div>"
 
 /***/ }),
 
@@ -121,38 +133,19 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "HomeComponent", function() { return HomeComponent; });
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
-/* harmony import */ var _angular_material_sidenav__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/material/sidenav */ "./node_modules/@angular/material/esm5/sidenav.es5.js");
-/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
-/* harmony import */ var src_app_Services_auth_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! src/app/Services/auth.service */ "./src/app/Services/auth.service.ts");
-
-
-
 
 
 var HomeComponent = /** @class */ (function () {
-    function HomeComponent(router, authService) {
-        this.router = router;
-        this.authService = authService;
+    function HomeComponent() {
     }
     HomeComponent.prototype.ngOnInit = function () { };
-    HomeComponent.prototype.open = function () {
-        return this.sidenav.open();
-    };
-    HomeComponent.prototype.close = function () {
-        return this.sidenav.close();
-    };
-    tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["ViewChild"])("sidenav"),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", _angular_material_sidenav__WEBPACK_IMPORTED_MODULE_2__["MatSidenav"])
-    ], HomeComponent.prototype, "sidenav", void 0);
     HomeComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
             selector: "app-home",
             template: __webpack_require__(/*! ./home.component.html */ "./src/app/Components/home/home.component.html"),
             styles: [__webpack_require__(/*! ./home.component.css */ "./src/app/Components/home/home.component.css")]
         }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_router__WEBPACK_IMPORTED_MODULE_3__["Router"],
-            src_app_Services_auth_service__WEBPACK_IMPORTED_MODULE_4__["AuthService"]])
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [])
     ], HomeComponent);
     return HomeComponent;
 }());
@@ -228,56 +221,67 @@ var LoginComponent = /** @class */ (function () {
 
 /***/ }),
 
-/***/ "./src/app/Components/profile/profile.component.css":
-/*!**********************************************************!*\
-  !*** ./src/app/Components/profile/profile.component.css ***!
-  \**********************************************************/
+/***/ "./src/app/Components/navigation/navigation.component.css":
+/*!****************************************************************!*\
+  !*** ./src/app/Components/navigation/navigation.component.css ***!
+  \****************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsImZpbGUiOiJzcmMvYXBwL0NvbXBvbmVudHMvcHJvZmlsZS9wcm9maWxlLmNvbXBvbmVudC5jc3MifQ== */"
+module.exports = "\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsImZpbGUiOiJzcmMvYXBwL0NvbXBvbmVudHMvbmF2aWdhdGlvbi9uYXZpZ2F0aW9uLmNvbXBvbmVudC5jc3MifQ== */"
 
 /***/ }),
 
-/***/ "./src/app/Components/profile/profile.component.html":
-/*!***********************************************************!*\
-  !*** ./src/app/Components/profile/profile.component.html ***!
-  \***********************************************************/
+/***/ "./src/app/Components/navigation/navigation.component.html":
+/*!*****************************************************************!*\
+  !*** ./src/app/Components/navigation/navigation.component.html ***!
+  \*****************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<p>\n  profile works!\n</p>\n"
+module.exports = "<div class=\"toolbar\" fxLayout=\"row\">\n    <mat-toolbar color=\"primary\" *ngIf='!authService.isLogged'>\n      <mat-toolbar-row>\n        <button mat-button>Biblioteka</button>\n        <span class=\"spacer\"></span>\n        <button mat-button [routerLink]=\"['login']\">Login</button>\n        <button mat-button [routerLink]=\"['register']\">Register</button>\n      </mat-toolbar-row>\n    </mat-toolbar>\n    <mat-toolbar color='primary' *ngIf='authService.isLogged'>\n      <mat-toolbar-row>\n        <button mat-button >Biblioteka</button>\n        <span class=\"spacer\"></span>\n        <button mat-button (click)='loadProfile()'>{{authService.user.username}}</button>\n        <button mat-button>news</button>\n      </mat-toolbar-row>\n    </mat-toolbar>\n  </div>"
 
 /***/ }),
 
-/***/ "./src/app/Components/profile/profile.component.ts":
-/*!*********************************************************!*\
-  !*** ./src/app/Components/profile/profile.component.ts ***!
-  \*********************************************************/
-/*! exports provided: ProfileComponent */
+/***/ "./src/app/Components/navigation/navigation.component.ts":
+/*!***************************************************************!*\
+  !*** ./src/app/Components/navigation/navigation.component.ts ***!
+  \***************************************************************/
+/*! exports provided: NavigationComponent */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ProfileComponent", function() { return ProfileComponent; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "NavigationComponent", function() { return NavigationComponent; });
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
+/* harmony import */ var src_app_Services_auth_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! src/app/Services/auth.service */ "./src/app/Services/auth.service.ts");
 
 
-var ProfileComponent = /** @class */ (function () {
-    function ProfileComponent() {
+
+
+var NavigationComponent = /** @class */ (function () {
+    function NavigationComponent(router, authService) {
+        this.router = router;
+        this.authService = authService;
     }
-    ProfileComponent.prototype.ngOnInit = function () {
+    NavigationComponent.prototype.ngOnInit = function () {
     };
-    ProfileComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+    NavigationComponent.prototype.loadProfile = function () {
+        console.log('kuku lele');
+        this.router.navigate(['/profile', this.authService.user.username]);
+    };
+    NavigationComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
-            selector: 'app-profile',
-            template: __webpack_require__(/*! ./profile.component.html */ "./src/app/Components/profile/profile.component.html"),
-            styles: [__webpack_require__(/*! ./profile.component.css */ "./src/app/Components/profile/profile.component.css")]
+            selector: 'app-navigation',
+            template: __webpack_require__(/*! ./navigation.component.html */ "./src/app/Components/navigation/navigation.component.html"),
+            styles: [__webpack_require__(/*! ./navigation.component.css */ "./src/app/Components/navigation/navigation.component.css")]
         }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [])
-    ], ProfileComponent);
-    return ProfileComponent;
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_router__WEBPACK_IMPORTED_MODULE_2__["Router"],
+            src_app_Services_auth_service__WEBPACK_IMPORTED_MODULE_3__["AuthService"]])
+    ], NavigationComponent);
+    return NavigationComponent;
 }());
 
 
@@ -474,6 +478,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm5/http.js");
+/* harmony import */ var src_assets_constants__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! src/assets/constants */ "./src/assets/constants.ts");
+
 
 
 
@@ -486,7 +492,7 @@ var AuthService = /** @class */ (function () {
     AuthService.prototype.login = function (username, password) {
         var _this = this;
         this.http
-            .post("http://localhost:3000/api/login", {
+            .post(src_assets_constants__WEBPACK_IMPORTED_MODULE_3__["api_url"] + "login", {
             username: username,
             password: password
         })
@@ -531,6 +537,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm5/http.js");
+/* harmony import */ var src_assets_constants__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! src/assets/constants */ "./src/assets/constants.ts");
+
 
 
 
@@ -540,7 +548,7 @@ var BooksService = /** @class */ (function () {
         this.books$ = this.fetchBooks();
     }
     BooksService.prototype.fetchBooks = function () {
-        return this.http.get("http://localhost:3000/api/fetchbooks");
+        return this.http.get(src_assets_constants__WEBPACK_IMPORTED_MODULE_3__["api_url"] + "fetchbooks");
     };
     BooksService.prototype.getBooks = function () {
         return this.books$;
@@ -615,8 +623,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Components_login_login_component__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Components/login/login.component */ "./src/app/Components/login/login.component.ts");
 /* harmony import */ var _Components_register_register_component__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Components/register/register.component */ "./src/app/Components/register/register.component.ts");
 /* harmony import */ var _Components_home_home_component__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Components/home/home.component */ "./src/app/Components/home/home.component.ts");
-/* harmony import */ var _Components_profile_profile_component__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./Components/profile/profile.component */ "./src/app/Components/profile/profile.component.ts");
-
 
 
 
@@ -624,10 +630,14 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var routes = [
+    { path: "", redirectTo: "/home", pathMatch: "full" },
     { path: "home", component: _Components_home_home_component__WEBPACK_IMPORTED_MODULE_5__["HomeComponent"] },
     { path: "login", component: _Components_login_login_component__WEBPACK_IMPORTED_MODULE_3__["LoginComponent"] },
     { path: "register", component: _Components_register_register_component__WEBPACK_IMPORTED_MODULE_4__["RegisterComponent"] },
-    { path: "profile/:id", component: _Components_profile_profile_component__WEBPACK_IMPORTED_MODULE_6__["ProfileComponent"] }
+    {
+        path: "profile",
+        loadChildren: "./Components/profile/profile.module#ProfileModule"
+    }
 ];
 var AppRoutingModule = /** @class */ (function () {
     function AppRoutingModule() {
@@ -663,7 +673,7 @@ module.exports = "\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<app-home></app-home>"
+module.exports = "<app-navigation></app-navigation>\n<router-outlet></router-outlet>\n"
 
 /***/ }),
 
@@ -726,7 +736,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! @angular/forms */ "./node_modules/@angular/forms/fesm5/forms.js");
 /* harmony import */ var _Components_best_rated_books_best_rated_books_component__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./Components/best-rated-books/best-rated-books.component */ "./src/app/Components/best-rated-books/best-rated-books.component.ts");
 /* harmony import */ var _Components_search_search_component__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./Components/search/search.component */ "./src/app/Components/search/search.component.ts");
-/* harmony import */ var _Components_profile_profile_component__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./Components/profile/profile.component */ "./src/app/Components/profile/profile.component.ts");
+/* harmony import */ var _Components_navigation_navigation_component__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./Components/navigation/navigation.component */ "./src/app/Components/navigation/navigation.component.ts");
 
 
 
@@ -756,7 +766,7 @@ var AppModule = /** @class */ (function () {
                 _Components_home_home_component__WEBPACK_IMPORTED_MODULE_10__["HomeComponent"],
                 _Components_best_rated_books_best_rated_books_component__WEBPACK_IMPORTED_MODULE_14__["BestRatedBooksComponent"],
                 _Components_search_search_component__WEBPACK_IMPORTED_MODULE_15__["SearchComponent"],
-                _Components_profile_profile_component__WEBPACK_IMPORTED_MODULE_16__["ProfileComponent"]
+                _Components_navigation_navigation_component__WEBPACK_IMPORTED_MODULE_16__["NavigationComponent"],
             ],
             imports: [
                 _angular_platform_browser__WEBPACK_IMPORTED_MODULE_1__["BrowserModule"],
@@ -766,7 +776,7 @@ var AppModule = /** @class */ (function () {
                 _angular_flex_layout__WEBPACK_IMPORTED_MODULE_11__["FlexLayoutModule"],
                 _angular_common_http__WEBPACK_IMPORTED_MODULE_12__["HttpClientModule"],
                 _angular_forms__WEBPACK_IMPORTED_MODULE_13__["ReactiveFormsModule"],
-                _angular_forms__WEBPACK_IMPORTED_MODULE_13__["FormsModule"]
+                _angular_forms__WEBPACK_IMPORTED_MODULE_13__["FormsModule"],
             ],
             providers: [],
             bootstrap: [_app_component__WEBPACK_IMPORTED_MODULE_5__["AppComponent"]]
@@ -789,7 +799,7 @@ var AppModule = /** @class */ (function () {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "api_url", function() { return api_url; });
-var api_url = 'http://localhost:3000/api';
+var api_url = 'http://localhost:3000/';
 
 
 /***/ }),

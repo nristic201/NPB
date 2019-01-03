@@ -2,6 +2,8 @@ import { Injectable } from "@angular/core";
 import { Knjiga } from "../models/Knjiga";
 import { Observable } from "rxjs";
 import { HttpClient } from "@angular/common/http";
+import { api_url } from 'src/assets/constants';
+
 
 @Injectable({
   providedIn: "root"
@@ -14,7 +16,7 @@ export class BooksService {
   }
 
   fetchBooks(): Observable<Knjiga[]> {
-    return this.http.get<Knjiga[]>("http://localhost:3000/api/fetchbooks");
+    return this.http.get<Knjiga[]>(api_url+"fetchbooks");
   }
   getBooks():Observable<Knjiga[]>{
     return this.books$;

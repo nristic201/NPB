@@ -3,6 +3,7 @@ import { HttpClient } from "@angular/common/http";
 import { Korisnik } from "../models/Korisnik";
 import { Observable, BehaviorSubject } from "rxjs";
 import { Router } from '@angular/router';
+import { api_url } from 'src/assets/constants';
 
 @Injectable({
   providedIn: "root"
@@ -16,7 +17,7 @@ export class AuthService {
 
   login(username: string, password: string): void {
     this.http
-      .post("http://localhost:3000/api/login", {
+      .post(api_url+"login", {
         username: username,
         password: password
       })
