@@ -58,15 +58,16 @@ app.get('/fetchbooks', (req, res) => {
 
 
 app.get('/profile/:username', function (req, res) {
-    let username= req.params.username;
+    let username = req.params.username;
     let obj = {};
     session
+        // .run("match (n:Korisnik {username: {usernameParam}})-[r:Iznajmio]-(k:Knjiga) return k, r", {
         .run("match (n:Korisnik {username: {usernameParam}})-[r:Iznajmio]-(k:Knjiga) return k, r", {
             usernameParam: username
         })
         .then(parser.parse)
-        .then((result)=>{
-            res.json(result)
+        .then((result) => {
+            
             // result.records.forEach(function (record) {
 
             //     let id = record._fields[0].identity.low;
