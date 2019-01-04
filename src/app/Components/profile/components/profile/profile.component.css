@@ -1,3 +1,11 @@
 .profileImage{
     width: 200px;
 }
+.book{
+    float: left;
+    width: 25%;
+}
+.myBooks{
+    width: 80%;
+    margin: 0 auto;
+}

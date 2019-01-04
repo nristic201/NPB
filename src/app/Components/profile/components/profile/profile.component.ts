@@ -17,7 +17,7 @@ export class ProfileComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.user = this.snapshot.data;
-    console.log(this.user)
+    this.user = this.snapshot.data['profile'];
+    console.log('ovde',this.user.iznajmljene_knjige)
   }
 }
