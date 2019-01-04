@@ -1,9 +1,8 @@
-<div class="profileContent">
-  <span>{{user.ime}} {{user.prezime}}</span>
+<div class="profileContent" fxLayout="row">
+  <h2>{{user.ime}} {{user.prezime}}</h2>
   <div fxLayout="column" class="profileCard">
     <img class="profileImage" src="https://material.angular.io/assets/img/examples/shiba2.jpg" alt="Photo of a Shiba Inu">
     <div fxLayout="row">
-      <h3> Username : {{user.username}}</h3>
     </div>
   </div>
   <div class="myBooks">
@@ -16,5 +15,11 @@
         <img src='https://www.pearsonhighered.com/assets/bigcovers/0/3/2/1/0321268458.jpg' width="150px" height="200px">
       </div>
     </div>
+  </div>
+  <div *ngFor='let friend of user.prijatelji' class="myFriend" fxLayout="row">
+    <img src="http://www.rsa.neu.edu/wp-content/uploads/blank-profile-picture.png" width="150px" height="150px">
+    <h3>{{friend.ime}}</h3>
+    <h3> {{friend.prezime}}</h3>
+    <button matbutton>UNFRIEND</button>
   </div>
 </div>

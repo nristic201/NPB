@@ -17,7 +17,7 @@ export class NavigationComponent implements OnInit {
 
   loadProfile(){
     console.log('kuku lele')
-    this.router.navigate(['/profile',this.authService.user.username]);
+    this.router.navigate(['/profile/',this.authService.user.username]);
   
   }
 }

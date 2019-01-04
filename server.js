@@ -1,12 +1,13 @@
 const express = require("express");
 const path = require("path");
+const cors = require('cors')
 const bodyParser = require("body-parser");
 const neo4j = require("neo4j-driver").v1;
 const parser = require("parse-neo4j");
 // Get our API routes
 
 const app = express();
-
+app.use(cors())
 // Parsers for POST data
 app.use(bodyParser.json());
 app.use(
