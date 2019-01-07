@@ -49,6 +49,7 @@ let korisnik = new Korisnik("Milica", "Martinovic", "comi", "comi");
 app.get('/', function(req, res){
 
 	if(status) {
+
 		let knjigePrijatelja=[];
 		let knjigeMojiZanrovi=[];
 
@@ -56,7 +57,7 @@ app.get('/', function(req, res){
 
 		var promisesGenre = [];
 
-		 getFollowees()
+		 getFollowees(korisnik.username_korisnika)
 		 .then(prijatelji => {
 			let locKnjige =[];
 			
@@ -83,7 +84,7 @@ app.get('/', function(req, res){
 			})
 			.then(knjigeP => {
 
-				getMyGenres()
+				getMyGenres(korisnik.username_korisnika)
 				.then(zanrovi =>{
 					//console.log(zanrovi);
 					zanrovi.forEach(zanr => {
@@ -101,10 +102,10 @@ app.get('/', function(req, res){
 
 						knjigePrijatelja = _.unique(knjigePrijatelja, function(p) {return p.naziv});
 					
-						res.render("indeks.ejs", {
+						/*res.render("indeks.ejs", {
 							friendsBooks: knjigePrijatelja,
 							myGenreBooks: knjigeMojiZanrovi
-						})
+						})*/
 					})
 				})
 			})
@@ -113,9 +114,9 @@ app.get('/', function(req, res){
 	}
 	else {
 		let booksByocena = getBooksByOcena();
-		res.render("indeks.ejs", {
+		/*res.render("indeks.ejs", {
 			topRatedBooks: booksByocena
-		})
+		})*/
 	}
 		
 });
@@ -156,21 +157,27 @@ function getBooksByGenre(zanr) {
 	})
 }
 
-function getMyGenres() {
+function getMyGenres(username) {
+
 	return new Promise((resolve, reject) => {
+
 		let zanrovi  = [];
-		client.smembers(korisnik.username + ":knjige", (err, reply) => {
+
+		client.smembers(username + ":zanrovi", (err, reply) => {
+
 			if(reply.length === 0) {
+
 				session
-					.run("match (k:Knjiga)<-[o:Ocenio]-(n:Korisnik {username: {unParam}}) return k", {unParam : korisnik.username})
+					.run("match (k:Knjiga)<-[o:Ocenio]-(n:Korisnik {username: {unParam}}) return k", 
+					{unParam : username})
 					.then(result => {
-					//	console.log(result.records[0]);
 						result.records.forEach(record => {
 							zanrovi.push(record._fields[0].properties.zanr);
-							client.sadd(korisnik.username + ":zanrovi", record._fields[0].properties.zanr);
+
+							client.sadd(username + ":zanrovi", record._fields[0].properties.zanr);
 						})
+
 						resolve(zanrovi);
-						
 					})
 					.catch(err => console.log(err))
 			}
@@ -220,26 +227,26 @@ function getBooksByOcena() {
 	return knjige;
 }
 
-function getFollowees() {
+function getFollowees(username) {
 
 	let prijatelji = [];
 	
 	return new Promise(function (resolve, reject) {
-		client.smembers(korisnik.username + ":prijatelji", function(err, reply) {
+		client.smembers(username + ":followees", function(err, reply) {
 
 		if(reply.length === 0) {
 
 			session
 				.run("match (a:Korisnik {username: {usernameParam}})-[p:Prati]->(b:Korisnik) return b", 
-				{usernameParam: korisnik.username})
+				{usernameParam: username})
 
 				.then(function(result) {
 				
 					result.records.forEach(function(record){
 
-						let username = record._fields[0].properties.username;
-						client.sadd(korisnik.username + ":prijatelji", username);
-						prijatelji.push(username);
+						let un = record._fields[0].properties.username;
+						client.sadd(username + ":followees", un);
+						prijatelji.push(un);
 					});
 					resolve(prijatelji);
 
@@ -262,6 +269,7 @@ function getFollowees() {
 function getFolloweeBooks(prijatelj) {
 
 	let knjige = [];
+
 	return new Promise(function(resolve, reject) {
 
 		client.smembers(prijatelj + ":knjige",function(error, reply) {
@@ -336,6 +344,10 @@ app.get('/addFollowee', function(req, res) { //addFolloweeeeeeeeeeeeeee?username
 				let prezime_followee = result.records._fields[1].properties.prezime;
 				followee = new Korisnik(ime_followee, prezime_followee, followeeUsername, "");
 				korisnik.addFollowee(followee);
+
+				//let followeCache
+
+				//client.sadd(korisnik.username_korisnika + ":followee", foll)
 			}
 			else {
 				console.log("Fail");
@@ -361,11 +373,11 @@ app.get('/pisac', function(req, res) { //  /pisac?imePisca=Kristijan&prezimePisc
 		.then(function(result){
 
 			if(result.records.length === 0) {
-				res.render('index', {
+			/*	res.render('index', {
 					status: status,
 					knjige: arrray,
 					kriterijum: kriterijum
-				});
+				});*/
 			}
 			else {
 
@@ -385,9 +397,9 @@ app.get('/pisac', function(req, res) { //  /pisac?imePisca=Kristijan&prezimePisc
 				//samo bez ponavljanja
 				//jer se pisac vezuje za vise istih knjiga sa razlicitim siframa
 				
-				 res.render('pisac', {
+				/* res.render('pisac', {
 					pisac: pisac //pisac sadrzi ime, prez i knjige koje je napisao
-				});
+				});*/
 			}
 
 			session.close();
@@ -421,11 +433,11 @@ function handleLogin(req, res) {
 				{usernameParam:username, passwordParam:password})
 				.then(function(result) {
 					if(result.records.length === 0) {
-						res.render('index', {
+						/*res.render('index', {
 							status: status,
 							knjige: arrray,
 							kriterijum: kriterijum
-						});
+						});*/
 					}
 					else{
 
@@ -464,11 +476,11 @@ function handleLogin(req, res) {
 							});
 						
 
-						res.render('index', {
+					/*	res.render('index', {
 							status: status,
 							knjige: arrray,
 							kriterijum: kriterijum
-						});
+						});*/
 					}
 					session.close();
 				})
@@ -510,11 +522,11 @@ app.post('/search', function(req, res) {
 							naziv: record._fields[0].properties.naziv
 						});
 					});
-					res.render('index', {
+				/*	res.render('index', {
 						status: status,
 						array: arrray,
 						kriterijum: kriterijum
-					});
+					});*/
 
 					session.close();
 				})
@@ -536,11 +548,11 @@ app.post('/search', function(req, res) {
 
 					let uniqKnjige = _.uniq(arrray, function(p) { return p.naziv; });
 					
-					res.render('index', {
+				/*	res.render('index', {
 						status: status,
 						array: uniqKnjige,
 						kriterijum: kriterijum
-					});
+					});*/
 
 					session.close();
 				})
@@ -562,11 +574,11 @@ app.post('/search', function(req, res) {
 					prezime: record._fields[0].properties.prezime
 				});
 			});
-			res.render('index', {
+			/*res.render('index', {
 				status: status,
 				array: arrray,
 				kriterijum: kriterijum
-			});
+			});*/
 
 			session.close();
 		})
@@ -586,11 +598,11 @@ app.post('/search', function(req, res) {
 					ime: record._fields[0].properties.ime
 				});
 			});
-			res.render('index', {
+			/*res.render('index', {
 				status: status,
 				array: arrray,
 				kriterijum: kriterijum
-			});
+			});*/
 
 			session.close();
 		})
@@ -611,11 +623,11 @@ app.post('/search', function(req, res) {
 					username: record._fields[0].properties.username
 				});
 			});
-			res.render('index', {
+		/*	res.render('index', {
 				status: status,
 				array: arrray,
 				kriterijum: kriterijum
-			});
+			});*/
 
 			session.close();
 		})
@@ -681,11 +693,11 @@ app.get('/knjiga', function(req, res) { // knjiga?naziv=Crvenkapa&izdanje=Prvo i
 				console.log(err);
 			});
 			
-			res.render('knjiga.ejs', {
+		/*	res.render('knjiga.ejs', {
 				status: status,
 				knjigeArr: knjige,
 				//kriterijum: kriterijum
-			});
+			});*/
 
 		})
 		.catch(function(error){
@@ -777,10 +789,15 @@ function getUsersFollowers(username) {
 }
 
 function getUsersLibraries(username) {
+
 	let libraries = [];
+
 	return new Promise((resolve, reject) => {
+
 		client.smembers(username + ":biblioteke", (err, reply) => {
+
 			if(reply.length === 0) {
+
 				session
 					.run("match (a:Korisnik {username: {usernameParam}})-[r:Registrovan_u]->(b:Biblioteka) return b", 
 					{usernameParam: korisnik.username_korisnika})
@@ -818,7 +835,7 @@ app.get('/profile', function(req, res) {
 	getUsersBorrowedBooks(korisnik.username_korisnika)
 	.then(books => {
 		korisnik.knjige_korisnika = books;
-		getFollowees()
+		getFollowees(korisnik.username_korisnika)
 		.then(followees => {
 			korisnik.followees_korisnika = followees;
 			getUsersFollowers(korisnik.username_korisnika)
@@ -828,9 +845,9 @@ app.get('/profile', function(req, res) {
 				.then(libraries => {
 					korisnik.biblioteke_korisnika = libraries;
 					console.log(korisnik);
-					res.render("profile.ejs", {
+				/*	res.render("profile.ejs", {
 						korisnik: korisnik
-					})
+					})*/
 				})
 
 			})
@@ -885,9 +902,9 @@ app.get('/biblioteka',function(req,res) { //biblioteka?imeBiblioteke=asdas
 
 			console.log(biblioteka);
 
-			res.render("biblioteka.ejs", {
+		/*	res.render("biblioteka.ejs", {
 				biblioteka: biblioteka //biblioteka ima svoj naziv i sve knjige koje ima
-			})
+			})*/
 		})
 		.catch(function(err){
 			console.log(err);
@@ -895,51 +912,96 @@ app.get('/biblioteka',function(req,res) { //biblioteka?imeBiblioteke=asdas
 
 });
 
-app.get('/biblioteka/iznajmi', function(req, res){ //biblioteka/iznajmi?id_knjige=id
+app.get('/biblioteka/iznajmi', function(req, res){ //biblioteka/iznajmi?id_knjige=id&naziv=nazivBibl&grad=grad
 
 	let id_knjige = req.body.id_knjige;
+	let naziv_biblioteke = req.body.naziv;
+	let grad = req.body.grad;
+	let clan = false;
 
 	//neka logika za proveru da li je korisnik clan ove biblioteke
-
-	session
-		.run("match (k:Knjiga) where ID(k) = {idParam} return k", {idParam: id_knjige})
-		.then(function(result) {
-
-			let broj_kopija = result.records[0]._fields[0].properties.broj_kopija;
-
-			if(broj_kopija > 1) {
-
-				session
-					.run("match (k:Knjiga) where ID(k) = {idParam} " + 
-							"match (n:Korisnik {username: {usernameParam}} " + 
-							"merge (n)-[r:Iznajmio {datum: {datumParam}}]->(k) return r", 
-							{idParam: id_knjige, usernameParam: korisnik.username_korisnika(), datumParam: new Date()})
-					.then(function(result) {
-
-						if(result.records.length != 0) {
-
-							session
-								.run("match (k:Knjiga) where ID(k) = {idParam} set k.broj_kopija = k.broj_kopija - 1", 
-										{idParam: id_knjige})
-								.then()
-								.catch(function(err) {
-									console.log(err);
-								});
-						}
-					})
-					.catch(function(err) {
-						console.log(err);
-					});
+	getUsersLibraries(korisnik.username_korisnika)
+	.then(biblioteke => {
+		biblioteke.forEach(bibl => {
+			if(bibl.ime_bibl === naziv_biblioteke && bibl.grad_biblioteke === grad) {
+				let clan = true;
 			}
 		})
-		.catch(function(err) {
-			console.log(err);
-		});
+
+		if(clan) {
+
+			session
+				.run("match (k:Knjiga) where ID(k) = {idParam} return k", {idParam: id_knjige})
+				.then(function(result) {
+		
+					let broj_kopija = result.records[0]._fields[0].properties.broj_kopija;
+		
+					if(broj_kopija > 0) {
+		
+						session
+							.run("match (k:Knjiga) where ID(k) = {idParam} " + 
+									"match (n:Korisnik {username: {usernameParam}} " + 
+									"merge (n)-[r:Iznajmio {datum: {datumParam}}]->(k) return r", 
+									{idParam: id_knjige, usernameParam: korisnik.username_korisnika(), datumParam: new Date()})
+							.then(function(result) {
+		
+								if(result.records.length != 0) {
+		
+									session
+										.run("match (k:Knjiga) where ID(k) = {idParam} set k.broj_kopija = k.broj_kopija - 1", 
+												{idParam: id_knjige})
+										.then()
+										.catch(function(err) {
+											console.log(err);
+										});
+								}
+							})
+							.catch(function(err) {
+								console.log(err);
+							});
+					}
+					else {
+						//------------------------------------------------------------
+					}
+				})
+				.catch(function(err) {
+					console.log(err);
+				});
+		}
+	})
+	
 });
 
-app.get('/knjiga/oceni', function(req,res) {
+app.get('/knjiga/oceni', function(req,res) { //knjiga/oceni?ocena=5&knjiga=naziv&izdanje=idzanje
 
-	//let ocena = 
+	let ocena = req.query.ocena;
+	let naziv = req.query.naziv;
+	let izdanje = req.query.izdanje;
+
+	let sum = 0;
+	let num = 0;
+
+	session
+		.run("match (k:Knjiga {naziv: {nazivParam}, izdanje: {izdanjeParam}}), (n:Korisnik {username: usernameParam}) merge (k)<-[:Ocenio]-(n)")
+		.then(result => {
+			session
+				.run("match (k:Knjiga {naziv: {nazivParam}, izdanje: {izdanjeParam}})-[o:Ocenio]-(p:Korisnik) return o")
+				.then(result => {
+					result.records.forEach(record => {
+						sum += record._fields[0].properties.ocena;
+						num++;
+					})
+					let prosecna = sum / num;
+					
+					session
+						.run("match (k:Knjiga {naziv: {nazivParam}, izdanje: {izdanjeParam}}) set k.ocena = {prosecnaParam} return k")
+						.then()
+						.catch(err => console.log(err))
+				})
+				.catch(err => console.log(err))
+		})
+		.catch(err => console.log(err));
+
 });
 
 app.listen(3000);
