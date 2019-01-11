@@ -34,6 +34,15 @@ const session = driver.session();
 
 //redis client
 let client = redis.createClient();
+let pubClient = redis.createClient();
+let subClient = redis.createClient();
+
+pubClient.on('connect', () => {
+	console.log("Pub connected");
+})
+subClient.on('connect', () => {
+	console.log("Sub connected");
+})
 client.on('connect', function() {
 	console.log('Connected to Redis');
 });
@@ -912,19 +921,18 @@ app.get('/biblioteka',function(req,res) { //biblioteka?imeBiblioteke=asdas
 
 });
 
-app.get('/biblioteka/iznajmi', function(req, res){ //biblioteka/iznajmi?id_knjige=id&naziv=nazivBibl&grad=grad
+app.post('/biblioteka/iznajmi', function(req, res){ //biblioteka/iznajmi?id_knjige=id&naziv=nazivBibl&grad=grad
 
 	let id_knjige = req.body.id_knjige;
 	let naziv_biblioteke = req.body.naziv;
 	let grad = req.body.grad;
 	let clan = false;
 
-	//neka logika za proveru da li je korisnik clan ove biblioteke
 	getUsersLibraries(korisnik.username_korisnika)
 	.then(biblioteke => {
 		biblioteke.forEach(bibl => {
 			if(bibl.ime_bibl === naziv_biblioteke && bibl.grad_biblioteke === grad) {
-				let clan = true;
+				clan = true;
 			}
 		})
 
@@ -940,7 +948,7 @@ app.get('/biblioteka/iznajmi', function(req, res){ //biblioteka/iznajmi?id_knjig
 		
 						session
 							.run("match (k:Knjiga) where ID(k) = {idParam} " + 
-									"match (n:Korisnik {username: {usernameParam}} " + 
+									"match (n:Korisnik {username: {usernameParam}}) " + 
 									"merge (n)-[r:Iznajmio {datum: {datumParam}}]->(k) return r", 
 									{idParam: id_knjige, usernameParam: korisnik.username_korisnika(), datumParam: new Date()})
 							.then(function(result) {
@@ -950,7 +958,12 @@ app.get('/biblioteka/iznajmi', function(req, res){ //biblioteka/iznajmi?id_knjig
 									session
 										.run("match (k:Knjiga) where ID(k) = {idParam} set k.broj_kopija = k.broj_kopija - 1", 
 												{idParam: id_knjige})
-										.then()
+										.then(result => {
+											if(result.records.length > 0) 
+												console.log("uspesno iznajmljena knjiga")
+											else 
+												console.log("niste iznajmili knjigu")
+										})
 										.catch(function(err) {
 											console.log(err);
 										});
@@ -961,7 +974,28 @@ app.get('/biblioteka/iznajmi', function(req, res){ //biblioteka/iznajmi?id_knjig
 							});
 					}
 					else {
-						//------------------------------------------------------------
+						
+						session
+							.run("match (k:Knjiga) where ID(k) = {idParam} " + 
+							"match (n:Korisnik {username: {usernameParam}}) merge (n)-[z:Zeli]->(k) return z, k", 
+							{idParam: id_knjige, usernameParam: korisnik.username_korisnika})
+							.then(result => {
+								if(result.records_fields[0].length != 0) {
+									let naziv_knjige = result.records._fields[1].properties.naziv;
+									let izdanje = result.records._fields[1].properties.izdanje;
+
+									//---------------OVDE SOKETI
+									subClient.subscribe(naziv_biblioteke + ":" + naziv_knjige + ":" + izdanje, (err, count) => {
+										if(err)
+											console.log("Try again");
+										else {
+											console.log("Uspesna prijava za knjigu ", naziv_knjige);
+										}
+									});
+									//--------------------------
+								}
+							})
+							.catch(err => console.log(err))
 					}
 				})
 				.catch(function(err) {
@@ -972,7 +1006,34 @@ app.get('/biblioteka/iznajmi', function(req, res){ //biblioteka/iznajmi?id_knjig
 	
 });
 
-app.get('/knjiga/oceni', function(req,res) { //knjiga/oceni?ocena=5&knjiga=naziv&izdanje=idzanje
+app.post('/biblioteka/oslobodi', function(req, res) {//biblioteka/iznajmi?id_knjige=id&naziv=nazivBibl&grad=grad
+
+	let id_knjige = req.body.id_knjige;
+	let naziv_biblioteke = req.body.naziv;
+	let grad = req.body.grad;
+
+	session
+		.run("match (a:Knjiga) where ID(a) = {idParam} match (k:Korisnik  {username: {unParam}}) where (k)-[o:Iznajmio]->(a) delete o", 
+			{idParam: id_knjige, unParam: korisnik.username_korisnika})
+		.then(result => {
+			if(result != null) {
+				session
+					.run("match (k:Knjiga) where ID(k) = {idParam} set k.broj_kopija = k.broj_kopija + 1", 
+							{idParam: id_knjige})
+					.then(result => {
+						//----------------------------------------------
+						pubClient.publish(naziv_biblioteke + ":" + naziv_knjige + ":" + izdanje, "Knjiga slobodna");
+						//----------------------------------------------
+					})
+					.catch(function(err) {
+						console.log(err);
+					});
+			}
+		})
+		.catch();
+});
+
+app.get('/knjiga/oceni', function(req,res) { //knjiga/oceni?ocena=5&knjiga=naziv&izdanje=izdanje
 
 	let ocena = req.query.ocena;
 	let naziv = req.query.naziv;
@@ -1002,6 +1063,27 @@ app.get('/knjiga/oceni', function(req,res) { //knjiga/oceni?ocena=5&knjiga=naziv
 		})
 		.catch(err => console.log(err));
 
+});
+
+app.post('/knjiga/review', (req, res) => {//knjiga/oceni////ocena=5&knjiga=naziv&izdanje=izdanje
+
+	let review = req.body.review;
+	let naziv = req.body.naziv;
+	let izdanje = req.body.izdanje;
+
+	session
+		.run("match (k:Korisnik {username: {unParam}}), (n:Knjiga {naziv: nazivParam, izdanje: izdanjeParam}})" +
+		" (k)-[r:Reviewed {review: {reviewParam}}]->(n)", {uParam:korisnik.username_korisnika, nazivParam: naziv, izdanjeParam: izdanje,
+		reviewParam: review})
+		.then(result => {
+
+			if(result.records.length != 0) {
+				console.log("uspesan review")
+			}
+			else 
+				console.log("neuspesan review");
+		})
+		.catch(err => console.log(err));
 });
 
 app.listen(3000);
