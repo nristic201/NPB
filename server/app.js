@@ -32,7 +32,7 @@ app.use(methodOverride('_method'));
 const driver = neo4j.driver('bolt://localhost:11001', neo4j.auth.basic('comi', 'comi'));
 const session = driver.session();
 
-//redis client
+//redis klijenti
 let client = redis.createClient();
 let pubClient = redis.createClient();
 let subClient = redis.createClient();
@@ -988,9 +988,13 @@ app.post('/biblioteka/iznajmi', function(req, res){ //biblioteka/iznajmi?id_knji
 									subClient.subscribe(naziv_biblioteke + ":" + naziv_knjige + ":" + izdanje, (err, count) => {
 										if(err)
 											console.log("Try again");
+											
 										else {
 											console.log("Uspesna prijava za knjigu ", naziv_knjige);
 										}
+									});
+									subClient.on("message", function(channel, message) {
+										//soket.send(message) //message je samo "Slobodna knjiga"
 									});
 									//--------------------------
 								}
