@@ -1,0 +1,33 @@
+<div class="bookinfo">
+  <div class="basicInfo">
+    <img src='https://www.pearsonhighered.com/assets/bigcovers/0/3/2/1/0321268458.jpg' width="150px" height="200px">
+    <div>
+      <div>naziv : <strong>{{book.naziv}}</strong></div>
+      <div>naziv : <strong>{{book.zanr}}</strong></div>
+      <div>ikonica : <strong>{{book.ocena}}</strong></div>
+    </div>
+    <div>
+      <p>"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
+        magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+        consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
+        pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est
+        laborum."</p>
+    </div>
+    Pisac :
+    <div class='book-writers'>
+      <div class='pisac' *ngFor="let item of book.pisac" >
+        <img src="http://www.rsa.neu.edu/wp-content/uploads/blank-profile-picture.png" width="100px" height="100px">
+        <strong> {{item.ime}} <br>{{item.prezime}}</strong>
+        <button matbutton color='primary'> View Profile</button>
+      </div>
+    </div>
+
+    Mozete naci u :
+    <div class='biblioteke'>
+      <div class="biblioteka" *ngFor="let bib of book.biblioteke">
+        <img src="http://www.rsa.neu.edu/wp-content/uploads/blank-profile-picture.png" width="100px" height="100px">
+        <strong> {{bib.ime}} {{bib.grad}}</strong>
+      </div>
+    </div>
+  </div>
+</div>

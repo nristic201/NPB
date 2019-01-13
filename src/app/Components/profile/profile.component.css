@@ -1,0 +1,16 @@
+
+.myFriends,.myBooks{
+    width: 100%;
+    display: flex !important;
+    flex-direction: row !important;
+}
+.myFriend,.book{
+    width: 100px !important;
+    margin: 20px;
+    height: 200px;
+}
+
+.profileContent {
+    width: 80%;
+    margin: 0 auto;
+}

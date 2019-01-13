@@ -1,0 +1,19 @@
+.bookinfo{
+    display: flex;
+    width: 60%;
+    flex-direction: row;
+    margin: 10% auto;
+}
+.basic-info ul {
+    float: left;
+    width: auto;
+}
+.biblioteke,.book-writers{
+    width: 100%;
+    display: flex !important;
+    flex-direction: row !important;
+}
+.biblioteka,.pisac{
+    width: 100px !important;
+    margin: 10px;
+}
