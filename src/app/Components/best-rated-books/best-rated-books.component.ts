@@ -1,6 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { Knjiga } from "src/app/models/Knjiga";
-import { BooksService } from "src/app/Services/books.service";
+import { BooksService } from "src/app/Services/books/books.service";
 import { Observable } from "rxjs";
 
 @Component({

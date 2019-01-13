@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthService } from 'src/app/Services/auth.service';
+import { AuthService } from 'src/app/Services/auth/auth.service';
 
 @Component({
   selector: 'app-navigation',
@@ -16,8 +16,6 @@ export class NavigationComponent implements OnInit {
   }
 
   loadProfile(){
-    console.log('kuku lele')
     this.router.navigate(['/profile/',this.authService.user.username]);
-  
   }
 }

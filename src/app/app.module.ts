@@ -13,8 +13,6 @@ import { HttpClientModule } from "@angular/common/http";
 import { ReactiveFormsModule, FormsModule } from "@angular/forms";
 import { BestRatedBooksComponent } from './Components/best-rated-books/best-rated-books.component';
 import { SearchComponent } from './Components/search/search.component';
-import { ProfileModule } from './Components/profile/profile.module';
-import { ProfileRoutingModule } from './Components/profile/profile-routing.module';
 import { NavigationComponent } from './Components/navigation/navigation.component';
 @NgModule({
   declarations: [
@@ -25,6 +23,7 @@ import { NavigationComponent } from './Components/navigation/navigation.componen
     BestRatedBooksComponent,
     SearchComponent,
     NavigationComponent,
+    
   ],
   imports: [
     BrowserModule,

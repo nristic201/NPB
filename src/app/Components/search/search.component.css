@@ -6,3 +6,12 @@
     width: 80%;
     margin: 0 auto;
 }
+.usersDiv,.booksDiv,.pisciDiv{
+    width: 100%;
+    display: flex !important;
+    flex-direction: row !important;
+}
+.single-user,.single-book,.single-pisac{
+    width: 100px !important;
+    margin: 10px;
+}

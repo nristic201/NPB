@@ -134,47 +134,6 @@ app.get('/logout', function (res, req) {
   korisnik = null;
 });
 
-app.post('/login', function (req, res) {
-
-  res.send(200).json({message:'hello'})
-  // username = req.body.username;
-  // password = req.body.password;
-
-  // session
-  //   .run('match(n:Korisnik {username:{usernameParam}, password:{passwordParam}}) return n', {
-  //     usernameParam: username,
-  //     passwordParam: password
-  //   })
-  //   .then(function (result) {
-  //     if (result.records.length === 0) {
-  //       res.render('index', {
-  //         status: status,
-  //         knjige: arrray,
-  //         kriterijum: kriterijum
-  //       });
-  //     } else {
-
-  //       let ime = result.records[0]._fields[0].properties.ime;
-  //       let prezime = result.records[0]._fields[0].properties.prezime;
-  //       let username = result.records[0]._fields[0].properties.username;
-  //       let password = result.records[0]._fields[0].properties.password;
-  //       korisnik = new Korisnik(ime, prezime, username, password);
-
-  //       status = true;
-  //       res.render('index', {
-  //         status: status,
-  //         knjige: arrray,
-  //         kriterijum: kriterijum
-  //       });
-  //     }
-
-  //     session.close();
-  //   })
-  //   .catch(function (error) {
-  //     console.log(error);
-  //   });
-});
-
 app.get('/search', function (req, res) {
 
   kriterijum = req.body.kriterijum;
@@ -327,73 +286,6 @@ app.get('/knjiga', function (req, res) { // knjiga?naziv=Crvenkapa
     .catch(function (error) {
       console.log(error);
     })
-});
-
-app.get('/profile/:username', function (req, res) {
-
-  let korisnikoveKnjige = [];
-  let korisnikoviPrijatelji = [];
-  session
-    .run("match (n:Korisnik {username: {usernameParam}, password: {passwordParam}})-[r:Iznajmio]-(k:Knjiga) return k, r", {
-      usernameParam: korisnik.username_korisnika,
-      passwordParam: korisnik.password_korisnika
-    })
-
-    .then(function (result) {
-      result.records.forEach(function (record) {
-
-        let id = record._fields[0].identity.low;
-        let naziv_knjige = record._fields[0].properties.naziv;
-        let sifra = record._fields[0].properties.sifra;
-        let datum_iznajmljivanja = record._fields[1].properties.datum;
-
-        let knjiga = new Knjiga(id, naziv_knjige, sifra, "da", datum_iznajmljivanja);
-
-        session
-          .run("match (b:Knjiga {naziv:{nazivParam}})-[r:Napisao]-(a) return a", {
-            nazivParam: naziv_knjige
-          })
-          .then(function (result) {
-            let imePisca = result.records[0]._fields[0].properties.ime;
-            let prezimePisca = result.records[0]._fields[0].properties.prezime;
-            let pisac = new Pisac(imePisca, prezimePisca);
-            knjiga.pisac_knjige = pisac;
-          })
-          .catch(function (err) {
-            console.log(err);
-          })
-        korisnik.addBook(knjiga);
-      })
-
-
-    })
-    .catch(function (error) {
-      console.log(error);
-    });
-
-  session
-    .run("match (a:Korisnik {username: {usernameParam}})-[r:Prijatelj]->(b:Korisnik) return b", {
-      usernameParam: korisnik.username_korisnika
-    })
-    .then(function (result) {
-      result.records.forEach(function (record) {
-        let ime_prijatelja = record._fields[0].properties.ime;
-        let prezime_prijatelja = record._fields[0].properties.prezime;
-        let username_prijatelja = record._fields[0].properties.username;
-        let prijatelj = new Korisnik(ime_prijatelja, prezime_prijatelja, username_prijatelja, "");
-        korisnik.addFriend(prijatelj);
-      })
-      console.log(korisnik);
-    })
-    .catch(function (err) {
-      console.log(err);
-    })
-
-  res.render('profile.ejs', {
-    korisnik: korisnik, //korisnik ima i username, pw, ime, prez, 
-    //sve knjige koje je iznajmio(naziv, datum_iznajmljivanja, pisac) i sve svoje prijatelje
-  });
-
 });
 
 app.get('/biblioteka', function (res, req) { //biblioteka?imeBiblioteke=asdas

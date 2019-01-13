@@ -11,7 +11,11 @@ const routes: Routes = [
   { path: "register", component: RegisterComponent },
   {
     path: "profile",
-    loadChildren: "./Components/profile/profile.module#ProfileModule"
+    loadChildren: "../app/Modules/profile/profile.module#ProfileModule"
+  },
+  {
+    path:'book',
+    loadChildren: "../app/Modules/book/book.module#BookModule"
   }
 ];
 

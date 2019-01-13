@@ -1,18 +1,45 @@
 <div class="searchComp" fxLayout="column">
   <form class="searchForm">
-    <mat-form-field>
+    <!-- <mat-form-field>
       <mat-select [(value)]="criteria" placeholder='criteria'>
         <mat-option value="Knjiga">Knjiga</mat-option>
         <mat-option value="Pisac">Pisac</mat-option>
         <mat-option value="Biblioteka">Biblioteka</mat-option>
+        <mat-option value="Korisnik">Korisnik</mat-option>
       </mat-select>
-    </mat-form-field>
+    </mat-form-field> -->
     <mat-form-field>
       <input matInput placeholder='search' name='search_value' [(ngModel)]='search_value'>
     </mat-form-field>
     <button mat-button (click)='searchForIt()'>GO</button>
   </form>
-  <div *ngIf='data$ | async' class="search_results">
-    ima necega
+  <div *ngIf='data' class="search_results">
+    <h4>Korisnici</h4>
+    <div class='usersDiv'>
+      <div class='single-user' *ngFor="let korisnik of data.korisnici">
+        <img src="http://www.rsa.neu.edu/wp-content/uploads/blank-profile-picture.png" width="100px" height="100px">
+        <p>{{korisnik.ime}} <br> {{korisnik.prezime}}</p>
+        <span><button mat-button color='primary'> Add Friend</button></span>
+        <span><button mat-button color='primary' (click)="loadProfile(korisnik.username)"> View Profile</button></span>
+      </div>
+    </div>
+    <hr>
+    <h4>Knjige</h4>
+    <div class='booksDiv'>
+      <div class='single-book' *ngFor="let knjiga of data.knjige">
+        <img src='https://www.pearsonhighered.com/assets/bigcovers/0/3/2/1/0321268458.jpg' width="100px" height="100px">
+        <p>{{knjiga.naziv}}</p>
+        <span><button mat-button color='primary' (click)='openBookInfo(knjiga.naziv)'> View Book</button></span>
+      </div>
+    </div>
+    <hr>
+    <h4>Pisci</h4>
+    <div class='pisciDiv'>
+      <div class='single-pisac' *ngFor="let pisac of data.pisci">
+        <img src='https://www.pearsonhighered.com/assets/bigcovers/0/3/2/1/0321268458.jpg' width="100px" height="100px">
+        <p>{{pisac.ime}}<br>{{pisac.prezime}}</p>
+        <span><button mat-button color='primary'> View Writter</button></span>
+      </div>
+    </div>
   </div>
 </div>
