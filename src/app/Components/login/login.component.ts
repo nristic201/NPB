@@ -1,5 +1,4 @@
-import { Component, OnInit } from "@angular/core";
-import { Korisnik } from "src/app/models/Korisnik";
+import { Component, OnInit } from "@angular/core";;
 import { AuthService } from "src/app/Services/auth/auth.service";
 import { FormGroup, FormControl } from "@angular/forms";
 import { Router } from '@angular/router';

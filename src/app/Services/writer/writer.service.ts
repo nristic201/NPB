@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Pisac } from 'src/app/models/Pisac';
 import { api_url } from 'src/assets/constants';
 
 @Injectable({
@@ -10,9 +9,9 @@ import { api_url } from 'src/assets/constants';
 export class WriterService {
 
   constructor(private http:HttpClient) { }
-  public getWriterInfo(ime:string,prezime:string):Observable<Pisac>{
+  public getWriterInfo(ime:string,prezime:string):Observable<any>{
 
-    return this.http.get<Pisac>(`${api_url}pisac`,{params:{
+    return this.http.get<any>(`${api_url}pisac`,{params:{
       ime:ime,
       prezime:prezime
     }})

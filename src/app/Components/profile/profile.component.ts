@@ -1,5 +1,4 @@
-import { Component, OnInit } from "@angular/core";
-import { Korisnik } from "src/app/models/Korisnik";
+import { Component, OnInit } from "@angular/core";;
 import { ProfileService } from "../../Services/profile/profile.service";
 import { Observable } from "rxjs";
 import { ActivatedRouteSnapshot, ActivatedRoute, Router } from "@angular/router";

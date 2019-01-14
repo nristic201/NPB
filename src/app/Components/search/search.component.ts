@@ -3,7 +3,6 @@ import { Observable } from "rxjs";
 import { SearchService } from "src/app/Services/search/search.service";
 import { ProfileService } from "../../Services/profile/profile.service";
 import { Router } from "@angular/router";
-import { Korisnik } from 'src/app/models/Korisnik';
 import { AuthService } from 'src/app/Services/auth/auth.service';
 import { SubService } from 'src/app/Services/subscriber/sub.service';
 

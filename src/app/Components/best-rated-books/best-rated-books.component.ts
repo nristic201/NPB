@@ -1,5 +1,4 @@
 import { Component, OnInit } from "@angular/core";
-import { Knjiga } from "src/app/models/Knjiga";
 import { BooksService } from "src/app/Services/books/books.service";
 import { Observable } from "rxjs";
 import { Router } from '@angular/router';
@@ -10,13 +9,13 @@ import { Router } from '@angular/router';
   styleUrls: ["./best-rated-books.component.css"]
 })
 export class BestRatedBooksComponent implements OnInit {
-  public best_rated:Knjiga[];
+  public best_rated:any[];
 
   constructor(private bookService: BooksService,private router:Router) {}
 
   ngOnInit() {
-    this.bookService.getBooks().subscribe((res:Knjiga[])=>{
-      this.best_rated=res.slice(0,3);
+    this.bookService.getBooks().subscribe((res:any[])=>{
+      this.best_rated=res
       console.log(res)
     });
   }

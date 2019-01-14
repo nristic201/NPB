@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Biblioteka } from 'src/app/models/Biblioteka';
 import { api_url } from 'src/assets/constants';
 
 @Injectable({
@@ -11,9 +10,9 @@ export class BibliotekaService {
 
   constructor(private http:HttpClient) { }
 
-  public getBiblioInfo(ime:string):Observable<Biblioteka>{
+  public getBiblioInfo(ime:string):Observable<any>{
 
-    return this.http.get<Biblioteka>(`${api_url}biblioteka`,{params:{
+    return this.http.get<any>(`${api_url}biblioteka`,{params:{
       ime:ime
     }})
   }

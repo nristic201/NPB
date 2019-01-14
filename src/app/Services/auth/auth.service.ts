@@ -1,6 +1,5 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
-import { Korisnik } from "../../models/Korisnik";
 
 import { api_url } from 'src/assets/constants';
 import { Router } from '@angular/router';
@@ -12,7 +11,7 @@ export class AuthService {
   constructor(private http: HttpClient,private router:Router) {}
 
   public isLogged: boolean=false;
-  public user :Korisnik=null;
+  public user =null;
   public error_msg: string;
 
   login(username: string, password: string): void {
@@ -23,7 +22,7 @@ export class AuthService {
       })
       .subscribe(res => {
         if (res["error"] === undefined) {
-          this.user=res as Korisnik;
+          this.user=res;
           this.isLogged = true;
           console.log(this.user)
           this.router.navigateByUrl('/home')

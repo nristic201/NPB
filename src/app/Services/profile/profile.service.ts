@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { Korisnik } from 'src/app/models/Korisnik';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators'
@@ -12,8 +11,8 @@ export class ProfileService {
 
   constructor(private http:HttpClient) { }
 
-  public getProfile(username:string):Observable<Korisnik>{
-    return this.http.get<Korisnik>(`${api_url}profile/${username}`)
+  public getProfile(username:string):Observable<any>{
+    return this.http.get<any>(`${api_url}profile/${username}`)
   }
   
 }

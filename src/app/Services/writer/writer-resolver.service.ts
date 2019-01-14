@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Resolve, Router, ActivatedRouteSnapshot } from '@angular/router';
-import { Pisac } from 'src/app/models/Pisac';
 import { WriterService } from './writer.service';
 import { Observable } from 'rxjs';
 import {map} from 'rxjs/operators'
@@ -8,11 +7,11 @@ import {map} from 'rxjs/operators'
 @Injectable({
   providedIn: 'root'
 })
-export class WriterResolver implements Resolve<Pisac>{
+export class WriterResolver implements Resolve<any>{
 
   constructor(private ws:WriterService,private router:Router) { }
 
-  resolve(route:ActivatedRouteSnapshot):Observable<Pisac>{
+  resolve(route:ActivatedRouteSnapshot):Observable<any>{
     
     console.log(route.queryParams)
     const ime= route.queryParams.ime;
