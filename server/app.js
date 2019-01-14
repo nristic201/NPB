@@ -31,7 +31,7 @@ app.use(bodyParser.urlencoded({
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(methodOverride('_method'));
 
-const driver = neo4j.driver('bolt://localhost:11001', neo4j.auth.basic('comi', 'comi'));
+const driver = neo4j.driver('bolt://localhost:7687', neo4j.auth.basic('neo4j', 'comi'));
 const session = driver.session();
 
 //redis klijenti
@@ -127,6 +127,14 @@ app.get('/', function (req, res) {
 
 });
 
+<<<<<<< HEAD
+=======
+//zanr vise nije property knjige nego poseban cvor u grafu
+//pribavi na sledeci nacin
+//npr match (k:Knjiga)-[:Pripada]-(z:Zanr) return k, z
+//vraca knjige sa njihovim zanrovima
+function getBooksByGenre(zanr) {
+>>>>>>> 4cf956e8b218c5fd76e58b8ff66bedfda081d422
 
 
 function getFollowees(username) {
@@ -233,6 +241,114 @@ app.post('/register', function (req, res) {
 		})
 });
 
+<<<<<<< HEAD
+=======
+app.get('/addFollowee', function(req, res) { //addFolloweeeeeeeeeeeeeee?username=NekiUsername
+
+	let followeeUsername = res.query.username;
+	session
+		.run("match (a:Korisnik {username: {usernameParam}}), (b:Korisnik {username: {followeeParam}}) merge (a)-[r:Prati]->(b) return r, b",
+		)
+		.then(function(result) {
+			if(result.records._fields[0]!=null) {
+				console.log("Uspesno zapracen korisink");
+				let ime_followee = result.records._fields[1].properties.ime;
+				let prezime_followee = result.records._fields[1].properties.prezime;
+				followee = new Korisnik(ime_followee, prezime_followee, followeeUsername, "");
+				korisnik.addFollowee(followee);
+
+				//let followeCache
+
+				//client.sadd(korisnik.username_korisnika + ":followee", foll)
+			}
+			else {
+				console.log("Fail");
+			}
+		})
+		.catch(function(err) {
+			console.log(err);
+		})
+});
+
+app.get('/unfollow', (req,res)=> {
+	let username = req.body.username;
+
+	session
+		.run("match (k:Korisnik {username: {followee}})<-[p:Prati]-(a:Korisnik {username: meParam}) delete p",
+			{meParam: korisnik.username, followee: username})
+		.then(result => {
+			if(result)
+				console.log('uspesno')
+			else 
+				console.log('neuspesno')
+		})
+		.catch(err => console.log(err));
+});
+
+app.get('/pisac', function(req, res) { //  /pisac?imePisca=Kristijan&prezimePisca=Andersen
+
+	let imePisca = req.query.imePisca;
+	let prezimePisca = req.query.prezimePisca;
+
+	let pisac = new Pisac(imePisca, prezimePisca);
+
+	let knjige = [];
+
+	client.smembers(imePisca+prezimePisca+':knjige', (err, reply) => {
+		if(reply.length === 0) {
+			session
+				.run('match (n:Pisac {ime:{imeParam}, prezime: {prezimeParam}})-[r:Napisao]-(b:Knjiga) return b', 
+				{imeParam:imePisca, prezimeParam:prezimePisca})
+				.then(function(result){
+
+					if(result.records.length === 0) {
+					/*	res.render('index', {
+							status: status,
+							knjige: arrray,
+							kriterijum: kriterijum
+						});*/
+					}
+					else {
+
+						result.records.forEach(function(record) {
+
+							let id = record._fields[0].identity.low;
+							let naziv = record._fields[0].properties.naziv;
+							let izdanje = record._fields[0].properties.izdanje;
+							let broj_kopija = record._fields[0].properties.broj_kopija;
+							let zanr = record._fields[0].properties.zanr;
+							knjige.push(new Knjiga(id, naziv, izdanje, broj_kopija, "",zanr, ""));
+						})
+						let filter_knjige = _.uniq(knjige, function(p) { return p.naziv; });
+						
+						pisac.knjige_pisca(filter_knjige);
+						//filter_knjige sadrze knjige koje je pisac napisao
+						//samo bez ponavljanja
+						//jer se pisac vezuje za vise istih knjiga sa razlicitim siframa
+						
+						/* res.render('pisac', {
+							pisac: pisac //pisac sadrzi ime, prez i knjige koje je napisao
+						});*/
+					}
+
+					session.close();
+				})
+				.catch(function(error){
+					console.log(error);
+				});
+
+		}
+		else {
+			
+		}
+	})
+});
+
+app.get('/logout', function(res, req) {
+	status = false;
+	korisnik = null;
+});
+>>>>>>> 4cf956e8b218c5fd76e58b8ff66bedfda081d422
 
 app.post('/login', handleLogin);
 
@@ -463,13 +579,18 @@ app.get('/knjiga/oceni', function (req, res) { //knjiga/oceni?ocena=5&knjiga=naz
 
 });
 
+<<<<<<< HEAD
 app.post('/knjiga/review', (req, res) => { //knjiga/oceni////ocena=5&knjiga=naziv&izdanje=izdanje
+=======
+app.post('/knjiga/review', (req, res) => {//knjiga/review//review=adaffs
+>>>>>>> 4cf956e8b218c5fd76e58b8ff66bedfda081d422
 
 	let review = req.body.review;
 	let naziv = req.body.naziv;
 	let izdanje = req.body.izdanje;
 
 	session
+<<<<<<< HEAD
 		.run("match (k:Korisnik {username: {unParam}}), (n:Knjiga {naziv: nazivParam, izdanje: izdanjeParam}})" +
 			" (k)-[r:Reviewed {review: {reviewParam}}]->(n)", {
 				uParam: korisnik.username_korisnika,
@@ -477,6 +598,11 @@ app.post('/knjiga/review', (req, res) => { //knjiga/oceni////ocena=5&knjiga=nazi
 				izdanjeParam: izdanje,
 				reviewParam: review
 			})
+=======
+		.run("match (k:Korisnik {username: {unParam}}), (n:Knjiga {naziv: nazivParam, izdanje: izdanjeParam}}) create" +
+		" (k)-[r:Reviewed {review: {reviewParam}}]->(n)", {uParam:korisnik.username_korisnika, nazivParam: naziv, izdanjeParam: izdanje,
+		reviewParam: review})
+>>>>>>> 4cf956e8b218c5fd76e58b8ff66bedfda081d422
 		.then(result => {
 
 			if (result.records.length != 0) {
