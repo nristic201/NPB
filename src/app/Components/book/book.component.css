@@ -2,7 +2,7 @@
     display: flex;
     width: 60%;
     flex-direction: row;
-    margin: 10% auto;
+    margin: 5% auto;
 }
 .basic-info ul {
     float: left;

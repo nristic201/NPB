@@ -14,6 +14,10 @@ import { ReactiveFormsModule, FormsModule } from "@angular/forms";
 import { BestRatedBooksComponent } from './Components/best-rated-books/best-rated-books.component';
 import { SearchComponent } from './Components/search/search.component';
 import { NavigationComponent } from './Components/navigation/navigation.component';
+import { WriterComponent } from './Components/writer/writer.component';
+import { ProfileComponent } from './Components/profile/profile.component';
+import { BookComponent } from './Components/book/book.component';
+import { BiblioComponent } from './Components/biblio/biblio.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -23,6 +27,10 @@ import { NavigationComponent } from './Components/navigation/navigation.componen
     BestRatedBooksComponent,
     SearchComponent,
     NavigationComponent,
+    WriterComponent,
+    ProfileComponent,
+    BookComponent,
+    BiblioComponent
     
   ],
   imports: [

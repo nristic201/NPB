@@ -13,13 +13,10 @@ export class LoginComponent implements OnInit {
   public username: string;
   public password: string;
 
-  constructor(private authService: AuthService,private router:Router) {}
+  constructor(public authService: AuthService,private router:Router) {}
 
   ngOnInit() {}
   loginReq() {
     this.authService.login(this.username, this.password)
-    if(this.authService.isLogged===true){
-      this.router.navigateByUrl['/home'];
-    }
   }
 }

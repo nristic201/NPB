@@ -1,0 +1,11 @@
+
+<div>
+  <h1><strong> {{writer.ime}} {{ writer.prezime}}</strong></h1>
+</div>
+<div class="knjigee">
+  <div class="single-one" *ngFor="let item of writer.knjige_pisca">
+      {{item.naziv}}
+      <img src='https://www.pearsonhighered.com/assets/bigcovers/0/3/2/1/0321268458.jpg' width="150px" height="200px">
+      <span><button mat-button color='primary' (click)='openBookInfo(item.naziv)'> View Book</button></span>
+  </div>
+</div>

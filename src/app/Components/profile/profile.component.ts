@@ -2,7 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { Korisnik } from "src/app/models/Korisnik";
 import { ProfileService } from "../../Services/profile/profile.service";
 import { Observable } from "rxjs";
-import { ActivatedRouteSnapshot, ActivatedRoute } from "@angular/router";
+import { ActivatedRouteSnapshot, ActivatedRoute, Router } from "@angular/router";
 
 @Component({
   selector: "app-profile",
@@ -12,12 +12,12 @@ import { ActivatedRouteSnapshot, ActivatedRoute } from "@angular/router";
 export class ProfileComponent implements OnInit {
   public user: any;
   public snapshot:any;
-  constructor(private route: ActivatedRoute) {
+  constructor(private route: ActivatedRoute,private router:Router) {
     this.snapshot=route.snapshot;
   }
 
   ngOnInit() {
     this.user = this.snapshot.data['profile'];
-    console.log('ovde',this.user.iznajmljene_knjige)
+    console.log('ovde',this.user)
   }
 }

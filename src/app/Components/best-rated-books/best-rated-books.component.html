@@ -1,15 +1,12 @@
 <div class="best_rated">
-  <div><h4>Best Rated Books</h4></div>
-  <div fxLayout="row" fxLayoutAlign="space-between start" >
-    <mat-card *ngFor="let book of best_rated" class="book_thumb">
-      <mat-card-header>
-        <div mat-card-avatar class="example-header-image"></div>
-        <mat-card-title>{{book.naziv}}</mat-card-title>
-        <mat-card-subtitle>{{book.zanr}}
-          <mat-icon class='star-rate'></mat-icon>{{book.ocena}}
-        </mat-card-subtitle>
-      </mat-card-header>
-      <img mat-card-image src="https://material.angular.io/assets/img/examples/shiba2.jpg" alt="Photo of a Shiba Inu">
-    </mat-card>
+  <div>
+    <h4>Best Rated Books</h4>
+  </div>
+  <div class='booksDiv'>
+    <div class='single-book' *ngFor="let knjiga of best_rated">
+      <img src='https://www.pearsonhighered.com/assets/bigcovers/0/3/2/1/0321268458.jpg' width="100px" height="100px">
+      <p>{{knjiga.naziv}}</p>
+      <span><button mat-button color='primary' (click)='openBookInfo(knjiga.naziv)'> View Book</button></span>
+    </div>
   </div>
 </div>

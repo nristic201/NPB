@@ -79,7 +79,6 @@ app.get("/profile/:username", function (req, res) {
         .then(parser.parse)
         .then(res2 => {
             obj = res2[0]
-            console.log('1')
             session
                 .run(
                     "match (n:Korisnik {username: {usernameParam}})-[r:Iznajmio]-(k:Knjiga) return k;", {
@@ -88,37 +87,47 @@ app.get("/profile/:username", function (req, res) {
                 )
                 .then(parser.parse)
                 .then(result => {
-                    console.log('2')
                     obj = { ...obj,
                         iznajmljene_knjige: result
                     };
                     client.smembers(obj.username + ":prijatelji", (err, reply) => {
-                        if (reply.length > 0) {
-                            obj = { ...obj,
-                                prijatelji: reply
-                            };
-                        } else {
-                            session
-                                .run("match (a:Korisnik {username: {usernameParam}})-[r:Prati]->(b:Korisnik) return b.username as username, b.ime as ime ,b.prezime as prezime", {
-                                    usernameParam: username
-                                })
-                                .then(parser.parse)
-                                .then(res1 => {
-                                    console.log('3')
-                                    obj = { ...obj,
-                                        prijatelji: res1
-                                    };
-                                    res1.forEach(element => {
-                                        client.sadd(obj.username + ":prijatelji", element.username)
-                                    });
-                                })
-                                .catch(function (err) {
-                                    console.log(err);
-                                })
+                        // if (reply.length > 0) {
+                        //     obj = { ...obj,
+                        //         prijatelji: reply
+                        //     };
+                        // } else {
+                        session
+                            .run("match (a:Korisnik {username: {usernameParam}})-[r:Prati]->(b:Korisnik) return b.username as username, b.ime as ime ,b.prezime as prezime", {
+                                usernameParam: username
+                            })
+                            .then(parser.parse)
+                            .then(res1 => {
+                                obj = { ...obj,
+                                    prijatelji: res1
+                                };
 
-
-                        }
-                        res.json(obj)
+                                //OVDE BI TREBALO DA SE UPISE IME PREZIME USERNAME
+                                //U REDIS , JER ON TRENUTNO PAMTI SAMO USERNAME
+                                res1.forEach(element => {
+                                    client.sadd(obj.username + ":prijatelji", element.username)
+                                });
+                            })
+                        //}
+                        session
+                            .run("match (n:Korisnik {username: {usernameParam}})-[r:Ocenio]-(k:Knjiga) return k;", {
+                                usernameParam: username
+                            })
+                            .then(parser.parse)
+                            .then(result4 => {
+                                obj = {
+                                    ...obj,
+                                    ocenjene_knjige: result4
+                                }
+                                res.json(obj)
+                            })
+                            .catch(function (err) {
+                                console.log(err);
+                            })
                     })
 
                 })
@@ -151,7 +160,7 @@ app.get("/book/:naziv", function (req, res) {
                 .then(parser.parse)
                 .then(function (results2) {
                     obj = { ...obj,
-                        pisac :results2
+                        pisac: results2
                     }
                     session
                         .run('match (b:Biblioteka)-[r:Ima]-(k:Knjiga {naziv: {nazivParam}}) return b', {
@@ -206,62 +215,58 @@ app.post('/register', function (req, res) {
         })
 });
 
-app.get('/subscribe', function (req, res) { //addFolloweeeeeeeeeeeeeee?username=NekiUsername
-    let myUsername = req.query.username;
-    let subscribe_to = res.query.subscribe_to
+
+app.get('/pisac', function (req, res) { //  /pisac?imePisca=Kristijan&prezimePisca=Andersen
+
+    console.log(req.query )
+    let imePisca = req.query.ime;
+    let prezimePisca = req.query.prezime;
+    let obj = {
+        ime: imePisca,
+        prezime: prezimePisca
+    }
     session
-        .run(`match (a:Korisnik {username: {${myUsername}}}), (b:Korisnik {username: {%${subscribe_to}}}) merge (a)-[r:Prati]->(b) return r, b`)
+        .run(`match (n:Pisac {ime:'${imePisca}', prezime: '${prezimePisca}'})-[r:Napisao]-(b:Knjiga) return b`)
         .then(parser.parse)
         .then(function (result) {
-            console.log(result);
+            // let filter_knjige = _.uniq(result, function (p) {
+            //     return p.naziv;
+            // });
+            obj = {
+                ...obj,
+                knjige_pisca: result
+            }
+
+            //filter_knjige sadrze knjige koje je pisac napisao
+            //samo bez ponavljanja
+            //jer se pisac vezuje za vise istih knjiga sa razlicitim siframa
+
+            res.json(obj)
+            session.close();
         })
-        .catch(function (err) {
-            console.log(err);
-        })
+        .catch(function (error) {
+            console.log(error);
+        });
+
 });
 
-app.get('/pisac', function(req, res) { //  /pisac?imePisca=Kristijan&prezimePisca=Andersen
+app.get('/biblioteka', function (req, res) { //biblioteka?imeBiblioteke=asdas
 
-	let imePisca = req.query.imePisca;
-	let prezimePisca = req.query.prezimePisca;
-
-	let pisac = new Pisac(imePisca, prezimePisca);
-
-	let knjige = [];
-
-	session
-		.run('match (n:Pisac {ime:{imeParam}, prezime: {prezimeParam}})-[r:Napisao]-(b:Knjiga) return b', 
-		{imeParam:imePisca, prezimeParam:prezimePisca})
-		.then(function(result){
-
-				result.records.forEach(function(record) {
-
-					let id = record._fields[0].identity.low;
-					let naziv = record._fields[0].properties.naziv;
-					let izdanje = record._fields[0].properties.izdanje;
-					let broj_kopija = record._fields[0].properties.broj_kopija;
-					let zanr = record._fields[0].properties.zanr;
-					knjige.push(new Knjiga(id, naziv, izdanje, broj_kopija, "",zanr, ""));
-				})
-				let filter_knjige = _.uniq(knjige, function(p) { return p.naziv; });
-				
-				pisac.knjige_pisca(filter_knjige);
-				//filter_knjige sadrze knjige koje je pisac napisao
-				//samo bez ponavljanja
-				//jer se pisac vezuje za vise istih knjiga sa razlicitim siframa
-				
-				 res.render('pisac', {
-					pisac: pisac //pisac sadrzi ime, prez i knjige koje je napisao
-				});
-			}
-
-			session.close();
-		})
-		.catch(function(error){
-			console.log(error);
-		});
-
-});
+    let imeBiblioteke = req.query.ime
+    console.log(req.query)
+    session
+      .run("match (n:Biblioteka {ime: {imeParam}})-[r:Ima]-(k:Knjiga) return k", {
+        imeParam: imeBiblioteke
+      })
+      .then(parser.parse)
+      .then(function (result) {
+        res.json(result)
+      })
+      .catch(function (err) {
+        console.log(err);
+      });
+  
+  });
 
 app.post("/search", function (req, res) {
     let value = req.body.value;
@@ -294,7 +299,13 @@ app.post("/search", function (req, res) {
                         .then(result3 => {
                             obj.pisci = result3
                             session.close();
-                            res.json(obj);
+                            session.run(`match (n:Biblioteka) where n.ime=~ '.*(?i)${value}.*' return n`)
+                            .then(parser.parse)
+                            .then(result4=>{
+                                obj.biblioteke=result4;
+                                console.log(obj)
+                                res.json(obj)
+                            })
                         })
                         .catch(function (error) {
                             console.log(error);
@@ -305,37 +316,22 @@ app.post("/search", function (req, res) {
                 });
         });
 });
-// } else if (kriterijum === 'pisci') {
+app.get('/subscribe', function (req, res) {
+    let myUsername = req.query.username;
+    let subscribe_to = req.query.sub_to
+    console.log(myUsername, subscribe_to)
+    session
+        .run(`match (a:Korisnik {username: '${myUsername}'}), (b:Korisnik {username: '${subscribe_to}'}) merge (a)-[r:Prati]->(b) return b`)
+        .then(parser.parse)
+        .then(function (result) {
+            console.log(result);
+        })
+        .catch(function (err) {
+            console.log(err);
+        })
+});
 
-//   session
-//     .run('match(n:Biblioteka) where n.ime =~ {biblParam} return n', {
-//       biblParam: '.*' + value + '.*'
-//     })
-//     .then(function (result) {
-
-//       result.records.forEach(function (record) {
-//         arrray.push({
-//           id: record._fields[0].identity.low,
-//           ime: record._fields[0].properties.ime
-//         });
-//       });
-//       res.render('index', {
-//         status: status,
-//         array: arrray,
-//         kriterijum: kriterijum
-//       });
-
-//       session.close();
-//     })
-//     .catch(function (error) {
-//       console.log(error);
-//     });
-// }
-// }
-//);
 const port = process.env.PORT || "3000";
 app.listen(port, () => {
     console.log("pokrenuto");
-
-
 });

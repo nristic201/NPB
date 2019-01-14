@@ -1,0 +1,11 @@
+<div class="knjigee">
+  <div class="single-one" *ngFor="let item of biblio_data">
+    {{item.naziv}}<br>
+    {{item.broj_kopija}}<br>
+    <img src='https://www.pearsonhighered.com/assets/bigcovers/0/3/2/1/0321268458.jpg' width="150px" height="200px">
+    <span><button mat-button color='primary'> View Book</button></span> <br>
+    <span><button mat-button color='primary'> Iznajmi</button></span><br>
+
+    <span><button mat-button color='primary'> Oceni</button></span>
+  </div>
+</div>

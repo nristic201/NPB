@@ -1,0 +1,10 @@
+.knjigee{
+    width: 80%;
+    margin: 0 auto;
+}
+
+.single-one{
+    float: left;
+    width: 200px;
+    flex-direction: row;
+}

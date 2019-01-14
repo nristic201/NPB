@@ -1,17 +1,24 @@
-<div class="profileContent" fxLayout="row">
-  
+<div class="profileContent" >
   <h2>{{user.ime}} {{user.prezime}}</h2>
   <div class="profileCard">
     <img class="profileImage" src="https://material.angular.io/assets/img/examples/shiba2.jpg" alt="Photo of a Shiba Inu" width='200px' height='200px'>
   </div>
   <hr>
-  <h4>Procitanje Knjige</h4>
+  <h4>Iznajmljenje Knjige</h4>
   <div class='myBooks'>
       <div class="book" *ngFor="let item of user.iznajmljene_knjige">
         <h5> {{item.naziv}}</h5>
         <img src='https://www.pearsonhighered.com/assets/bigcovers/0/3/2/1/0321268458.jpg' width="100px" height="100px">
       </div>
   </div>
+  <h4>Knjige Koje Sam Ocenio</h4>
+  <div class='myBooks'>
+    <div class="book" *ngFor="let item of user.ocenjene_knjige">
+      <h5> {{item.naziv}}</h5>
+      <img src='https://www.pearsonhighered.com/assets/bigcovers/0/3/2/1/0321268458.jpg' width="100px" height="100px">
+    </div>
+</div>
+
   <h4> Moji Prijatelji</h4>
   <div class=myFriends>
     <div *ngFor='let friend of user.prijatelji' class="myFriend" >

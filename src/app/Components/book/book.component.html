@@ -27,6 +27,7 @@
       <div class="biblioteka" *ngFor="let bib of book.biblioteke">
         <img src="http://www.rsa.neu.edu/wp-content/uploads/blank-profile-picture.png" width="100px" height="100px">
         <strong> {{bib.ime}} {{bib.grad}}</strong>
+        <span > <button matbutton (click)="loadBiblioInfo(bib.ime)"> Otvori Biblioteku</button></span>
       </div>
     </div>
   </div>

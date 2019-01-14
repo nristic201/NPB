@@ -14,8 +14,14 @@ export class NavigationComponent implements OnInit {
 
   ngOnInit() {
   }
-
+  goHome(){
+    console.log('lele')
+    this.router.navigateByUrl('/home');
+  }
   loadProfile(){
     this.router.navigate(['/profile/',this.authService.user.username]);
+  }
+  logout(){
+    this.authService.logout();
   }
 }

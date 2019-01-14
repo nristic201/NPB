@@ -3,12 +3,13 @@ import { HttpClient } from "@angular/common/http";
 import { Korisnik } from "../../models/Korisnik";
 
 import { api_url } from 'src/assets/constants';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: "root"
 })
 export class AuthService {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient,private router:Router) {}
 
   public isLogged: boolean=false;
   public user :Korisnik=null;
@@ -25,6 +26,7 @@ export class AuthService {
           this.user=res as Korisnik;
           this.isLogged = true;
           console.log(this.user)
+          this.router.navigateByUrl('/home')
         }
         else {
           this.error_msg=res['error'];
@@ -34,5 +36,6 @@ export class AuthService {
   logout() {
     this.isLogged = false;
     this.user=null;
+    this.router.navigateByUrl('/home')
   }
 }

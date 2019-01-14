@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-book',
@@ -10,7 +10,7 @@ export class BookComponent implements OnInit {
 
   public book: any;
   public snapshot:any;
-  constructor(private route: ActivatedRoute) {
+  constructor(private route: ActivatedRoute,private router:Router) {
     this.snapshot=route.snapshot;
   }
 
@@ -19,6 +19,8 @@ export class BookComponent implements OnInit {
     this.book = this.snapshot.data['profile'];
     console.log(this.book)
   }
-
+  loadBiblioInfo(naziv){
+    this.router.navigate(["/biblioteka/", naziv]);
+  }
 
 }

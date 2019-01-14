@@ -1,7 +1,7 @@
 <div class="toolbar" fxLayout="row">
     <mat-toolbar color="primary" *ngIf='!authService.isLogged'>
       <mat-toolbar-row>
-        <button mat-button>Biblioteka</button>
+        <button mat-button (click)='goHome()' >Biblioteka</button>
         <span class="spacer"></span>
         <button mat-button [routerLink]="['login']">Login</button>
         <button mat-button [routerLink]="['register']">Register</button>
@@ -9,10 +9,11 @@
     </mat-toolbar>
     <mat-toolbar color='primary' *ngIf='authService.isLogged'>
       <mat-toolbar-row>
-        <button mat-button >Biblioteka</button>
+        <button mat-button (click)='goHome()' >Biblioteka</button>
         <span class="spacer"></span>
         <button mat-button (click)='loadProfile()'>{{authService.user.username}}</button>
         <button mat-button>news</button>
+        <button mat-button (click)="logout()">Logout</button>
       </mat-toolbar-row>
     </mat-toolbar>
   </div>
