@@ -58,15 +58,59 @@ app.post("/login", (req, res) => {
             console.log(error);
         });
 });
-app.get("/fetchbooks", (req, res) => {
 
-    session
-        .run("match (k:Knjiga) return k")
-        .then(parser.parse)
-        .then(parsed => {
-            res.status(200).json(parsed);
-        });
-});
+app.get('/mygenresbooks', (req, res) => {
+    let knjigeMojiZanrovi = []
+    let promises = []
+    getMyGenres('comi')
+        .then(zanrovi => {
+            console.log('ovo su zanrovi lele',zanrovi)
+            zanrovi.forEach(zanr => {
+                promises.push(
+                    getBooksByGenre(zanr)
+                    .then(books => {
+                        knjigeMojiZanrovi.push.apply(knjigeMojiZanrovi, books);
+                    })
+                    .catch(err => console.log(err))
+                )
+            })
+            Promise.all(promises).then(
+                () => {
+                    res.json(knjigeMojiZanrovi)
+                }
+            )
+        })
+})
+app.get("/friendsbooks", (req, res) => {
+    let knjigePrijatelja= []
+    let promises = [];
+    getFollowees('comi')
+    .then(prijatelji => {
+        prijatelji.forEach(prijatelj => {
+            promises.push(
+                getFolloweeBooks(prijatelj.username)
+                .then(friendsBooks => {
+                    knjigePrijatelja.push.apply(knjigePrijatelja, friendsBooks);
+                })
+                .catch(err => {
+                    console.log(err);
+                })
+            )
+        })
+        Promise.all(promises).then(
+            () => {
+                res.json(knjigePrijatelja)
+            }
+        )
+    })
+})
+// session
+//     .run("match (k:Knjiga) return k")
+//     .then(parser.parse)
+//     .then(parsed => {
+//         res.status(200).json(parsed);
+//     });
+
 app.get("/profile/:username", function (req, res) {
 
     let username = req.params.username;
@@ -147,8 +191,6 @@ app.get("/book/:naziv", function (req, res) {
         .then(parser.parse)
         .then(function (result) {
             obj = result[0]
-            //U BAZI NE BI TREBALO DA POSSTOJ3 DVE KNJJIGE SA ISTIM IMENOM
-            //KAD PROMENIS BAZU OBBRISI [0]
             session
                 .run('match (b:Knjiga {naziv:{nazivParam}})-[r:Napisao]-(a) return a', {
                     nazivParam: naziv
@@ -165,7 +207,7 @@ app.get("/book/:naziv", function (req, res) {
                         .then(parser.parse)
                         .then(function (result3) {
                             obj = { ...obj,
-                                biblioteke: result3
+                                biblioteka: result3[0]
                             }
                             res.json(obj)
                         })
@@ -241,15 +283,12 @@ app.get('/pisac', function (req, res) { //  /pisac?imePisca=Kristijan&prezimePis
         });
 
 });
-
 app.get('/biblioteka', function (req, res) { //biblioteka?imeBiblioteke=asdas
 
     let imeBiblioteke = req.query.ime
     console.log(req.query)
     session
-        .run("match (n:Biblioteka {ime: {imeParam}})-[r:Ima]-(k:Knjiga) return k", {
-            imeParam: imeBiblioteke
-        })
+        .run("match (n:Biblioteka)-[r:Ima]-(k:Knjiga) return k")
         .then(parser.parse)
         .then(function (result) {
             res.json(result)
@@ -259,7 +298,6 @@ app.get('/biblioteka', function (req, res) { //biblioteka?imeBiblioteke=asdas
         });
 
 });
-
 app.post("/search", function (req, res) {
     let value = req.body.value;
     let obj = {
@@ -309,74 +347,141 @@ app.get('/subscribe', function (req, res) {
         .run(`match (a:Korisnik {username: '${myUsername}'}), (b:Korisnik {username: '${subscribe_to}'}) merge (a)-[r:Prati]->(b) return b`)
         .then(parser.parse)
         .then(function (result) {
-            res.json({message:`Uspesno ste zapratiti ${subscribe_to}`})
+            res.json({
+                message: `Uspesno ste zapratiti ${subscribe_to}`
+            })
         })
         .catch(function (err) {
             console.log(err);
         })
 });
 
-app.post('/booksgenre', (req, res) => {
-    let knjige = [];
+function getBooksByGenre(zanr) {
     return new Promise((resolve, reject) => {
         client.smembers(zanr + ":knjige", (err, reply) => {
             if (reply.length === 0) {
                 session
-                    .run("match (z:Zanr {zanr: {zanrParam}})-[:Pripada]-(k:Knjiga)-[n:Napisao]-(p:Pisac) return k, p", {
+                    .run("match (k:Knjiga)-[p:Pripada]->(z:Zanr {zanr:{zanrParam}}) return k", {
                         zanrParam: zanr
                     })
                     .then(parser.parse)
                     .then(result => {
-                        results.forEach(el => {
-                            let knjigaCache = el['k'].naziv + "*" + el['k'].izdanje + "*" + el['k'].ocena + "*" + el['p'].pisacIme + "*" + e['p'].pisacPrezime;
-
-                            client.sadd(zanr + ":knjige", knjigaCache);
+                        result.forEach(el => {
+                            client.sadd(zanr + ":knjige", JSON.stringify(el));
                         });
-                        resolve(knjige);
+                        resolve(result);
                     })
             } else {
-                let locKnjige = reply;
-                locKnjige.forEach(knjiga => {
-                    let pom = knjiga.split("*");
-                    let knjiga1 = new BookBasicView(pom[0], pom[3] + " " + pom[4], pom[1], pom[2]);
-                    knjige.push(knjiga1);
+                console.log('zanr knjia iz redisa')
+                let obj = [];
+                reply.forEach(el => {
+                    obj.push(JSON.parse(el))
                 })
-                resolve(knjige);
-            }
-        })
-    })
-
-})
-
-function getMyGenres(username) {
-    return new Promise((resolve, reject) => {
-        let zanrovi = [];
-        client.smembers(username + ":zanrovi", (err, reply) => {
-            if (reply.length === 0) {
-                session
-                    .run("match (k:Knjiga)<-[o:Ocenio]-(n:Korisnik {username: {unParam}}) return k", {
-                        unParam: username
-                    })
-                    .then(result => {
-                        result.records.forEach(record => {
-                            zanrovi.push(record._fields[0].properties.zanr);
-                            client.sadd(username + ":zanrovi", record._fields[0].properties.zanr);
-                        })
-                        resolve(zanrovi);
-                    })
-                    .catch(err => console.log(err))
-            } else {
-                resolve(reply);
+                resolve(obj);
             }
         })
     })
 }
 
+function getMyGenres(username) {
+    let zanrovi = [];
+    return new Promise((resolve, reject) => {
+        client.smembers(username + ":zanrovi", (err, reply) => {
+            if (reply.length === 0) {
+                session
+                    .run("match (z:Zanr)-[:Pripada]-(k:Knjiga)<-[o:Ocenio]-(n:Korisnik {username: {unParam}}) return z", {
+                        unParam: username
+                    })
+                    .then(parser.parse)
+                    .then(result => {
+                        result.forEach(record => {
+                            client.sadd(username + ":zanrovi", JSON.stringify(record.zanr));
+                            zanrovi.push(record.zanr);
+                        })
+                        resolve(zanrovi);
+                    })
+                    .catch(err => console.log(err))
+            } else {
+                console.log('zanrovi iz redisa')
+                let obj = [];
+                reply.forEach(el => {
+                    obj.push(JSON.parse(el))
+                })
+                resolve(obj);
+            }
+        })
+    })
+}
+
+function getFollowees(username) {
+    let prijatelji = [];
+    return new Promise(function (resolve, reject) {
+        client.smembers(username + ":followees", function (err, reply) {
+            if (reply.length === 0) {
+                session
+                    .run("match (a:Korisnik {username: {usernameParam}})-[p:Prati]->(b:Korisnik) return b", {
+                        usernameParam: username
+                    })
+                    .then(parser.parse)
+                    .then(function (result) {
+                        result.forEach(el => {
+                            client.sadd(username + ":followees", JSON.stringify(el))
+                        })
+                        resolve(result);
+                    })
+                    .catch(function (err) {
+                        reject(err);
+                        console.log(err);
+                    });
+            } else {
+                console.log('followees iz redisa')
+                let obj = [];
+                reply.forEach(el => {
+                    obj.push(JSON.parse(el))
+                })
+                resolve(obj);
+            }
+        });
+    })
+};
+
+function getFolloweeBooks(prijatelj) {
+    return new Promise(function (resolve, reject) {
+        client.smembers(prijatelj + ":knjige", function (error, reply) {
+            if (reply.length === 0) {
+
+                session
+                    .run("match(k:Korisnik {username: {unParam}})-[r:Ocenio]->(a:Knjiga)<-[n:Napisao]-(p:Pisac) return a", {
+                        unParam: prijatelj
+                    })
+                    .then(parser.parse)
+                    .then(function (result) {
+                        knjige = result;
+                        result.forEach(el => {
+                            client.sadd(prijatelj + ":knjige", JSON.stringify(el));
+                        });
+                        console.log("asdasd", knjige)
+                        resolve(knjige);
+                    })
+                    .catch(function (err) {
+                        console.log(err);
+                        reject(err);
+                    });
+            } else {
+                console.log('knjige za frenda iz redisa')
+                let obj = [];
+                reply.forEach(el => {
+                    obj.push(JSON.parse(el))
+                })
+                resolve(obj);
+            }
+        });
+    })
+
+}
 
 function getBooksByOcena() {
-
     let knjige = [];
-
     client.smembers("najbolje_knjige", function (err, reply) {
         if (reply.length === 0) {
 
@@ -410,9 +515,6 @@ function getBooksByOcena() {
     });
     return knjige;
 }
-
-
-
 
 const port = process.env.PORT || "3000";
 app.listen(port, () => {

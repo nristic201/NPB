@@ -19,8 +19,8 @@ export class BookComponent implements OnInit {
     this.book = this.snapshot.data['profile'];
     console.log(this.book)
   }
-  loadBiblioInfo(naziv){
-    this.router.navigate(["/biblioteka/", naziv]);
+  loadBiblioInfo(){
+    this.router.navigate(["/biblioteka"]);
   }
 
 }

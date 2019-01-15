@@ -25,10 +25,10 @@
 
     Mozete naci u :
     <div class='biblioteke'>
-      <div class="biblioteka" *ngFor="let bib of book.biblioteke">
+      <div class="biblioteka">
         <img src="http://www.rsa.neu.edu/wp-content/uploads/blank-profile-picture.png" width="100px" height="100px">
-        <strong> {{bib.ime}} {{bib.grad}}</strong>
-        <span > <button matbutton (click)="loadBiblioInfo(bib.ime)"> Otvori Biblioteku</button></span>
+        <strong> {{book.biblioteka.naziv}} {{book.biblioteka.grad}}</strong>
+        <span > <button matbutton (click)="loadBiblioInfo()"> Otvori Biblioteku</button></span>
       </div>
     </div>
   </div>

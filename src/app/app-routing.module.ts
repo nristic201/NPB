@@ -38,7 +38,7 @@ const routes: Routes = [
     resolve: [WriterResolver]
   },
   {
-    path: "biblioteka/:ime",
+    path: "biblioteka",
     component: BiblioComponent,
     resolve: [BibliotekaResolver]
   }

@@ -22,4 +22,11 @@ export class BooksService {
   fetchBookData(naziv: string): Observable<any> {
     return this.http.get<any>(`${api_url}book/${naziv}`);
   }
+
+  fetchFriendsBooks(username:string):Observable<any>{
+    return this.http.get(api_url+'friendsbooks')
+  }
+  fetchMyGenresBooks(username:string):Observable<any>{
+    return this.http.get(api_url+'mygenresbooks')
+  }
 }
