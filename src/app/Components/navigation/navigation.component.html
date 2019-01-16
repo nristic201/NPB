@@ -11,6 +11,7 @@
       <mat-toolbar-row>
         <button mat-button (click)='goHome()' >Biblioteka</button>
         <span class="spacer"></span>
+        <!-- <h1>{{ISBN | async}}</h1> -->
         <button mat-button (click)='loadProfile()'>{{authService.user.username}}</button>
         <button mat-button>news</button>
         <button mat-button (click)="logout()">Logout</button>

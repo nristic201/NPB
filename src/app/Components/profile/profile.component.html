@@ -9,6 +9,7 @@
       <div class="book" *ngFor="let item of user.iznajmljene_knjige">
         <h5> {{item.naziv}}</h5>
         <img src='{{item.urlSlike}}' width="100px" height="100px">
+        <button mat-button (click)="vratiKnjigu(item.isbn)"> vrati</button>
       </div>
   </div>
   <h4>Knjige Koje Sam Ocenio</h4>

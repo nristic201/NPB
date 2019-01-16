@@ -1,3 +1,22 @@
 .main-content{
-    height: 100vh;
+    height: 50vh;
+}
+
+.best_rated{
+    width: 80%;
+    margin: 0 auto;
+}
+.book_thumb{
+    width: 300px;
+    height: 300px;
+}
+.booksDiv{
+    width: 100%;
+    display: flex !important;
+    flex-direction: row !important;
+}
+.single-book{
+    width: 100px !important;
+    margin: 10px;
+    height: 250px;
 }

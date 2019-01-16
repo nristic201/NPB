@@ -1,10 +1,12 @@
-const express = require('express')
-const router = express.Router();
+const express= require('express')
+const routes= express.Router();
 
-const returnRouter=()=>{
-    const login= require('./routes/login')
+const returnRoouter =(io)=>{
+    const login =require('./routes/login')
 
-    router.use('/login',login);
+    routes.use('/login',login)
+
+    return routes;
 }
 
-module.exports=returnRouter;
+module.exports=returnRoouter;

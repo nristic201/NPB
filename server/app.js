@@ -127,16 +127,6 @@ app.get('/', function (req, res) {
 
 });
 
-<<<<<<< HEAD
-=======
-//zanr vise nije property knjige nego poseban cvor u grafu
-//pribavi na sledeci nacin
-//npr match (k:Knjiga)-[:Pripada]-(z:Zanr) return k, z
-//vraca knjige sa njihovim zanrovima
-function getBooksByGenre(zanr) {
->>>>>>> 4cf956e8b218c5fd76e58b8ff66bedfda081d422
-
-
 function getFollowees(username) {
 
 	let prijatelji = [];
@@ -423,99 +413,6 @@ function handleLogin(req, res) {
 	})
 
 }
-
-app.post('/biblioteka/iznajmi', function (req, res) { //biblioteka/iznajmi?id_knjige=id&naziv=nazivBibl&grad=grad
-
-	let id_knjige = req.body.id_knjige;
-	let naziv_biblioteke = req.body.naziv;
-	let grad = req.body.grad;
-	let clan = false;
-	getUsersLibraries(korisnik.username_korisnika)
-		.then(biblioteke => {
-			biblioteke.forEach(bibl => {
-				if (bibl.ime_bibl === naziv_biblioteke && bibl.grad_biblioteke === grad) {
-					clan = true;
-				}
-			})
-			if (clan) {
-				session
-					.run("match (k:Knjiga) where ID(k) = {idParam} return k", {
-						idParam: id_knjige
-					})
-					.then(function (result) {
-
-						let broj_kopija = result.records[0]._fields[0].properties.broj_kopija;
-
-						if (broj_kopija > 0) {
-
-							session
-								.run("match (k:Knjiga) where ID(k) = {idParam} " +
-									"match (n:Korisnik {username: {usernameParam}}) " +
-									"merge (n)-[r:Iznajmio {datum: {datumParam}}]->(k) return r", {
-										idParam: id_knjige,
-										usernameParam: korisnik.username_korisnika(),
-										datumParam: new Date()
-									})
-								.then(function (result) {
-
-									if (result.records.length != 0) {
-
-										session
-											.run("match (k:Knjiga) where ID(k) = {idParam} set k.broj_kopija = k.broj_kopija - 1", {
-												idParam: id_knjige
-											})
-											.then(result => {
-												if (result.records.length > 0)
-													console.log("uspesno iznajmljena knjiga")
-												else
-													console.log("niste iznajmili knjigu")
-											})
-											.catch(function (err) {
-												console.log(err);
-											});
-									}
-								})
-								.catch(function (err) {
-									console.log(err);
-								});
-						} else {
-
-							session
-								.run("match (k:Knjiga) where ID(k) = {idParam} " +
-									"match (n:Korisnik {username: {usernameParam}}) merge (n)-[z:Zeli]->(k) return z, k", {
-										idParam: id_knjige,
-										usernameParam: korisnik.username_korisnika
-									})
-								.then(result => {
-									if (result.records_fields[0].length != 0) {
-										let naziv_knjige = result.records._fields[1].properties.naziv;
-										let izdanje = result.records._fields[1].properties.izdanje;
-
-										//---------------OVDE SOKETI
-										subClient.subscribe(naziv_biblioteke + ":" + naziv_knjige + ":" + izdanje, (err, count) => {
-											if (err)
-												console.log("Try again");
-
-											else {
-												console.log("Uspesna prijava za knjigu ", naziv_knjige);
-											}
-										});
-										subClient.on("message", function (channel, message) {
-											//soket.send(message) //message je samo "Slobodna knjiga"
-										});
-										//--------------------------
-									}
-								})
-								.catch(err => console.log(err))
-						}
-					})
-					.catch(function (err) {
-						console.log(err);
-					});
-			}
-		})
-
-});
 
 app.post('/biblioteka/oslobodi', function (req, res) { //biblioteka/iznajmi?id_knjige=id&naziv=nazivBibl&grad=grad
 

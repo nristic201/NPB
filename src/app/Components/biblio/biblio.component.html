@@ -4,8 +4,7 @@
     {{item.broj_kopija}}<br>
     <img src='{{item.urlSlike}}' width="150px" height="200px">
     <span><button mat-button color='primary'> View Book</button></span> <br>
-    <span><button mat-button color='primary'> Iznajmi</button></span><br>
-
+    <span><button mat-button color='primary' (click)="iznajmiKnjigu(item.ISBN)"> Iznajmi</button></span><br>
     <span><button mat-button color='primary'> Oceni</button></span>
   </div>
 </div>

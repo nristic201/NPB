@@ -18,6 +18,11 @@ import { WriterComponent } from './Components/writer/writer.component';
 import { ProfileComponent } from './Components/profile/profile.component';
 import { BookComponent } from './Components/book/book.component';
 import { BiblioComponent } from './Components/biblio/biblio.component';
+import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
+import { NewsComponent } from './Components/news/news.component';
+const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
+
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -30,7 +35,8 @@ import { BiblioComponent } from './Components/biblio/biblio.component';
     WriterComponent,
     ProfileComponent,
     BookComponent,
-    BiblioComponent
+    BiblioComponent,
+    NewsComponent,
     
   ],
   imports: [
@@ -42,6 +48,7 @@ import { BiblioComponent } from './Components/biblio/biblio.component';
     HttpClientModule,
     ReactiveFormsModule,
     FormsModule,
+    SocketIoModule.forRoot(config)
   ],
   providers: [],
   bootstrap: [AppComponent]

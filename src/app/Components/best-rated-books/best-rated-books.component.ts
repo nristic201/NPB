@@ -16,7 +16,6 @@ export class BestRatedBooksComponent implements OnInit {
   ngOnInit() {
     this.bookService.getBooks().subscribe((res:any[])=>{
       this.best_rated=res
-      console.log(res)
     });
   }
   openBookInfo(naziv) {

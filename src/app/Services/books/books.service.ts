@@ -29,4 +29,10 @@ export class BooksService {
   fetchMyGenresBooks(username:string):Observable<any>{
     return this.http.get(api_url+'mygenresbooks')
   }
+  oslobodiKnjigu(isbn,username):Observable<any>{
+    return this.http.post(api_url+'biblioteka/oslobodi',{
+      isbn:isbn,
+      username:username
+    })
+  }
 }
