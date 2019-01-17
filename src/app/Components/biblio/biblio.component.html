@@ -1,10 +1,14 @@
-<div class="knjigee">
-  <div class="single-one" *ngFor="let item of biblio_data">
+<div style="margin: 0 auto;">
+<input [(ngModel)]="ocena" type="number" placeholder="ocena">
+</div>
+<div class="booksDiv">
+  <div class="single-book" *ngFor="let item of biblio_data">
     {{item.naziv}}<br>
-    {{item.broj_kopija}}<br>
-    <img src='{{item.urlSlike}}' width="150px" height="200px">
-    <span><button mat-button color='primary'> View Book</button></span> <br>
-    <span><button mat-button color='primary' (click)="iznajmiKnjigu(item.ISBN)"> Iznajmi</button></span><br>
-    <span><button mat-button color='primary'> Oceni</button></span>
+     br. kopija : {{item.broj_kopija}}<br>
+    <img src='{{item.urlSlike}}' class="book_thumb">
+    <span><button mat-button color='primary' (click)="openBookInfo(item.naziv)" > View Book</button></span> <br>
+    <span><button mat-button color='primary' (click)="iznajmiKnjigu(item)"> Iznajmi</button></span><br>
+    <span><button mat-button color='primary' (click)="oceniKnjigu(item.ISBN)"> Oceni</button></span>
   </div>
+ 
 </div>

@@ -1,7 +1,5 @@
-<p>
-  news works!
-</p>
-poruke
-<div *ngIf="messages">
-    <div>{{messages}}</div>
-  </div>
+<mat-menu #appMenu="matMenu">
+  <span mat-menu-item *ngFor="let item of messages">
+    {{item}}
+  </span>
+</mat-menu>

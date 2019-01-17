@@ -23,16 +23,24 @@ export class BooksService {
     return this.http.get<any>(`${api_url}book/${naziv}`);
   }
 
-  fetchFriendsBooks(username:string):Observable<any>{
-    return this.http.get(api_url+'friendsbooks')
+  fetchFriendsBooks(username: string): Observable<any> {
+    return this.http.get(api_url + "friendsbooks", {
+      params: {
+        username: username
+      }
+    });
   }
-  fetchMyGenresBooks(username:string):Observable<any>{
-    return this.http.get(api_url+'mygenresbooks')
+  fetchMyGenresBooks(username: string): Observable<any> {
+    return this.http.get(api_url + "mygenresbooks", {
+      params: {
+        username: username
+      }
+    });
   }
-  oslobodiKnjigu(isbn,username):Observable<any>{
-    return this.http.post(api_url+'biblioteka/oslobodi',{
-      isbn:isbn,
-      username:username
+  oslobodiKnjigu(isbn: number, username: string):Observable<any>{
+    return this.http.post(api_url + "biblioteka/oslobodi", {
+        username: username,
+        isbn:isbn
     })
   }
 }

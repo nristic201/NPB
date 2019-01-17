@@ -2,11 +2,11 @@
   <app-search></app-search>
   <div class="best_rated" *ngIf="auth.isLogged">
     <div>
-      <h4>Knjige Zanrova koje ja citam</h4>
+      <h4>Predlog knjiga istog  zanra kao knjige koje sam ja ocenio</h4>
     </div>
     <div class='booksDiv'>
-      <div class='single-book' *ngFor="let knjiga of mygenresbooks">
-        <img src='{{knjiga.urlSlike}}' width="100px" height="100px">
+      <div class="single-book" *ngFor="let knjiga of mygenresbooks">
+        <img src='{{knjiga.urlSlike}}' class='book_thumb'>
         <p>{{knjiga.naziv}}</p>
         <span><button mat-button color='primary' (click)="openBookInfo(knjiga.naziv)" > View Book</button></span>
       </div>
@@ -17,9 +17,9 @@
       <h4>Knjige koje su prijatelji ocenili</h4>
     </div>
     <div class='booksDiv'>
-      <div class='single-book' *ngFor="let knjiga of friends_books">
+      <div class="single-book" *ngFor="let knjiga of friends_books">
         <p>{{knjiga.ime}} {{knjiga.prezime}}</p>
-        <img src='{{knjiga.urlSlike}}' width="100px" height="100px">
+        <img src='{{knjiga.urlSlike}}' class='book_thumb'>
         <p>{{knjiga.naziv}}</p>
         <span><button mat-button color='primary' (click)="openBookInfo(knjiga.naziv)" > View Book</button></span>
       </div>

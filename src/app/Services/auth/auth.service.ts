@@ -24,7 +24,6 @@ export class AuthService {
         if (res["error"] === undefined) {
           this.user=res;
           this.isLogged = true;
-          console.log(this.user)
           this.router.navigateByUrl('/home')
         }
         else {

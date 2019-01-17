@@ -1,29 +1,37 @@
 import { Component, OnInit, Input } from "@angular/core";
 import { Router } from "@angular/router";
 import { AuthService } from "src/app/Services/auth/auth.service";
-import { SendIsbnService } from "src/app/Services/send-isbn.service";
-import { map } from "rxjs/operators";
-import { Socket } from "ngx-socket-io";
+import { ProfileService } from "src/app/Services/profile/profile.service";
+import { BibliotekaService } from "src/app/Services/biblioteka/biblioteka.service";
 @Component({
   selector: "app-navigation",
   templateUrl: "./navigation.component.html",
   styleUrls: ["./navigation.component.css"]
 })
 export class NavigationComponent implements OnInit {
-  public messages = [];
+
   constructor(
     public router: Router,
-    private authService: AuthService,
+    public authService: AuthService,
+    
+    private ps: ProfileService,
+    private bs: BibliotekaService
   ) {}
 
   ngOnInit() {
+    
   }
+  
   goHome() {
-    console.log("lele");
     this.router.navigateByUrl("/home");
   }
   loadProfile() {
     this.router.navigate(["/profile/", this.authService.user.username]);
+    this.ps.getProfile(this.authService.user.username);
+  }
+  loadBiblio() {
+    this.router.navigate(["/biblioteka"]);
+    this.bs.getBiblioInfo();
   }
   logout() {
     this.authService.logout();

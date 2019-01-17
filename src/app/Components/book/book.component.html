@@ -1,34 +1,20 @@
 <div class="bookinfo">
   <div class="basicInfo">
-    <img src='{{book.urlSlike}}' width="150px" height="200px">
+    <img src='{{book.urlSlike}}' width="300px" height="300px">
     <div>
       <div>naziv : <strong>{{book.naziv}}</strong></div>
-      <div>isbn :<strong> {{book.isbn}}</strong></div>
-      <div>naziv : <strong>{{book.zanr}}</strong></div>
+      <div>isbn :<strong> {{book.ISBN}}</strong></div>
       <div> izdanje : <strong>{{book.izdanje}}</strong></div>
     </div>
     <div>
-      <p>"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
-        magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-        consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-        pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est
-        laborum."</p>
+      <p>{{book.description}}</p>
     </div>
     Pisac :
     <div class='book-writers'>
       <div class='pisac' *ngFor="let item of book.pisac" >
         <img src="http://www.rsa.neu.edu/wp-content/uploads/blank-profile-picture.png" width="100px" height="100px">
         <strong> {{item.ime}} <br>{{item.prezime}}</strong>
-        <button matbutton color='primary'> View Profile</button>
-      </div>
-    </div>
-
-    Mozete naci u :
-    <div class='biblioteke'>
-      <div class="biblioteka">
-        <img src="http://www.rsa.neu.edu/wp-content/uploads/blank-profile-picture.png" width="100px" height="100px">
-        <strong> {{book.biblioteka.naziv}} {{book.biblioteka.grad}}</strong>
-        <span > <button matbutton (click)="loadBiblioInfo()"> Otvori Biblioteku</button></span>
+        <button mat-button color='primary' (click)="loadWritterInfo(item.ime,item.prezime)"> View Profile</button>
       </div>
     </div>
   </div>

@@ -11,7 +11,8 @@ import {
   MatSidenavModule,
   MatCardModule,
   MatSelectModule,
-  MatOptionModule
+  MatOptionModule,
+  MatMenuModule
 } from "@angular/material";
 @NgModule({
   declarations: [],
@@ -26,9 +27,11 @@ import {
     MatSidenavModule,
     MatCardModule,
     MatSelectModule,
-    MatOptionModule
+    MatOptionModule,
+    MatMenuModule
   ],
   exports: [
+    MatMenuModule,
     CommonModule,
     MatButtonModule,
     MatCheckboxModule,

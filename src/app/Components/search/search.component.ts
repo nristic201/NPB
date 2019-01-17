@@ -30,13 +30,6 @@ export class SearchComponent implements OnInit {
     this.searchService.searchFor(this.search_value).subscribe(res => {
       console.log(res)
       this.data = res;
-      // if(this.auth.isLogged){
-      //   console.log(this.loged_user)
-      //  this.data.korisnici.filter(op=>{
-      //    if(this.loged_user.prijatelji.find(el=>el.id===op.id)===null)
-      //    return op;
-      //  })
-     // }
     });
   }
   
@@ -51,7 +44,7 @@ export class SearchComponent implements OnInit {
   }
   subTo(subto:string){
     if(this.auth.isLogged)
-    this.subS.subscribeTo(this.auth.user.username,subto);
+      this.subS.subscribeTo(this.auth.user.username,subto)
     else{
       alert('Please Login');
     }

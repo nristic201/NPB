@@ -1,19 +1,23 @@
 <div class="toolbar" fxLayout="row">
     <mat-toolbar color="primary" *ngIf='!authService.isLogged'>
       <mat-toolbar-row>
-        <button mat-button (click)='goHome()' >Biblioteka</button>
+        <button mat-button (click)='goHome()' >Home</button>
+        <button mat-button (click)='loadBiblio()' >Biblioteka</button>
         <span class="spacer"></span>
         <button mat-button [routerLink]="['login']">Login</button>
-        <button mat-button [routerLink]="['register']">Register</button>
       </mat-toolbar-row>
     </mat-toolbar>
     <mat-toolbar color='primary' *ngIf='authService.isLogged'>
       <mat-toolbar-row>
-        <button mat-button (click)='goHome()' >Biblioteka</button>
+        <button mat-button (click)='goHome()' >Home</button>
+        <button mat-button (click)='loadBiblio()' >Biblioteka</button>
         <span class="spacer"></span>
-        <!-- <h1>{{ISBN | async}}</h1> -->
+        <mat-menu #menu="matMenu">
+          <span mat-menu-item *ngFor="let item of messages">
+            {{item}}
+          </span>
+        </mat-menu>
         <button mat-button (click)='loadProfile()'>{{authService.user.username}}</button>
-        <button mat-button>news</button>
         <button mat-button (click)="logout()">Logout</button>
       </mat-toolbar-row>
     </mat-toolbar>

@@ -1,12 +1,12 @@
 import { TestBed } from '@angular/core/testing';
 
-import { SendIsbnService } from './send-isbn.service';
+import { BorrowedBooksService } from './borrowed-books.service';
 
-describe('SendIsbnService', () => {
+describe('BorrowedBooksService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
 
   it('should be created', () => {
-    const service: SendIsbnService = TestBed.get(SendIsbnService);
+    const service: BorrowedBooksService = TestBed.get(BorrowedBooksService);
     expect(service).toBeTruthy();
   });
 });

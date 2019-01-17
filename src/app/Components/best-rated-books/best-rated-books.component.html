@@ -4,7 +4,7 @@
   </div>
   <div class='booksDiv'>
     <div class='single-book' *ngFor="let knjiga of best_rated">
-      <img src='{{knjiga.urlSlike}}' width="100px" height="100px">
+      <img src='{{knjiga.urlSlike}}' class='book_thumb'>
       <p>{{knjiga.naziv}}</p>
       <span><button mat-button color='primary' (click)='openBookInfo(knjiga.naziv)'> View Book</button></span>
     </div>

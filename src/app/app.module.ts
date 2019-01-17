@@ -3,7 +3,6 @@ import { NgModule } from "@angular/core";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
-import { RegisterComponent } from "./Components/register/register.component";
 import { LoginComponent } from "./Components/login/login.component";
 import "hammerjs";
 import { MaterialModule } from "./Modules/material/material.module";
@@ -19,15 +18,15 @@ import { ProfileComponent } from './Components/profile/profile.component';
 import { BookComponent } from './Components/book/book.component';
 import { BiblioComponent } from './Components/biblio/biblio.component';
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
-import { NewsComponent } from './Components/news/news.component';
 const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
 
+import { ToastrModule } from 'ngx-toastr';
+import { NewsComponent } from './Components/news/news.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
-    RegisterComponent,
     HomeComponent,
     BestRatedBooksComponent,
     SearchComponent,
@@ -36,10 +35,11 @@ const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
     ProfileComponent,
     BookComponent,
     BiblioComponent,
-    NewsComponent,
+    NewsComponent
     
   ],
   imports: [
+    ToastrModule.forRoot(),
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,

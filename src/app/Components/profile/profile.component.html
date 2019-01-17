@@ -5,28 +5,28 @@
   </div>
   <hr>
   <h4>Iznajmljenje Knjige</h4>
-  <div class='myBooks'>
+  <div class='booksDiv'>
       <div class="book" *ngFor="let item of user.iznajmljene_knjige">
         <h5> {{item.naziv}}</h5>
-        <img src='{{item.urlSlike}}' width="100px" height="100px">
-        <button mat-button (click)="vratiKnjigu(item.isbn)"> vrati</button>
+        <img src='{{item.urlSlike}}' class="book_thumb">
+        <button mat-button (click)="vratiKnjigu(item.ISBN)"> vrati</button>
       </div>
   </div>
   <h4>Knjige Koje Sam Ocenio</h4>
-  <div class='myBooks'>
-    <div class="book" *ngFor="let item of user.ocenjene_knjige">
+  <div class='booksDiv'>
+    <div class="single-book" *ngFor="let item of user.ocenjene_knjige">
       <h5> {{item.naziv}}</h5>
-      <img src='{{item.urlSlike}}' width="100px" height="100px">
+      <img src='{{item.urlSlike}}' class="book_thumb">
     </div>
 </div>
 
   <h4> Moji Prijatelji</h4>
-  <div class=myFriends>
+  <div class='usersDiv'>
     <div *ngFor='let friend of user.prijatelji' class="myFriend" >
       <img src="http://www.rsa.neu.edu/wp-content/uploads/blank-profile-picture.png" width="100px" height="100px">
       <h3>{{friend.ime}}</h3>
       <h3> {{friend.prezime}}</h3>
-      <button matbutton>UNFRIEND</button>
+      <button mat-button (click)="unfollow(friend.username)">UNFRIEND</button>
     </div>
   </div>
 </div>

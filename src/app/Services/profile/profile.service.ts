@@ -1,18 +1,27 @@
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { tap } from 'rxjs/operators'
-import { api_url } from 'src/assets/constants';
+import { Injectable } from "@angular/core";
+import { HttpClient } from "@angular/common/http";
+import { Observable, BehaviorSubject } from "rxjs";
+import { tap } from "rxjs/operators";
+import { api_url } from "src/assets/constants";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root"
 })
 export class ProfileService {
+  
+  private dataSource = new BehaviorSubject<any>(null);
+  data = this.dataSource.asObservable();
 
-  constructor(private http:HttpClient) { }
+  updatedDataSelection(data: any){
+    this.dataSource.next(data);
+  }
 
-  public getProfile(username:string):Observable<any>{
-    return this.http.get<any>(`${api_url}profile/${username}`)
+  constructor(private http: HttpClient) {}
+
+  public getProfile(username: string){
+    this.http.get<any>(`${api_url}profile/${username}`).subscribe(res=>{
+      this.updatedDataSelection(res)
+    });
   }
   
 }

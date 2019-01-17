@@ -1,13 +1,5 @@
 <div class="searchComp" fxLayout="column">
   <form class="searchForm">
-    <!-- <mat-form-field>
-      <mat-select [(value)]="criteria" placeholder='criteria'>
-        <mat-option value="Knjiga">Knjiga</mat-option>
-        <mat-option value="Pisac">Pisac</mat-option>
-        <mat-option value="Biblioteka">Biblioteka</mat-option>
-        <mat-option value="Korisnik">Korisnik</mat-option>
-      </mat-select>
-    </mat-form-field> -->
     <mat-form-field>
       <input matInput placeholder='search' name='search_value' [(ngModel)]='search_value'>
     </mat-form-field>
@@ -17,7 +9,7 @@
     <h4>Korisnici</h4>
     <div class='usersDiv'>
       <div class='single-user' *ngFor="let korisnik of data.korisnici">
-        <img src="http://www.rsa.neu.edu/wp-content/uploads/blank-profile-picture.png" width="100px" height="100px">
+        <img src="http://www.rsa.neu.edu/wp-content/uploads/blank-profile-picture.png" width="200px" height="200px">
         <p>{{korisnik.ime}} <br> {{korisnik.prezime}}</p>
 
         <span><button mat-button color='primary' (click)="subTo(korisnik.username)"> Add Friend</button></span>
@@ -28,7 +20,7 @@
     <h4>Knjige</h4>
     <div class='booksDiv'>
       <div class='single-book' *ngFor="let knjiga of data.knjige">
-        <img src='https://www.pearsonhighered.com/assets/bigcovers/0/3/2/1/0321268458.jpg' width="100px" height="100px">
+        <img src='{{knjiga.urlSlike}}' class="book_thumb">
         <p>{{knjiga.naziv}}</p>
         <span><button mat-button color='primary' (click)='openBookInfo(knjiga.naziv)'> View Book</button></span>
       </div>
@@ -37,17 +29,9 @@
     <h4>Pisci</h4>
     <div class='pisciDiv'>
       <div class='single-pisac' *ngFor="let pisac of data.pisci">
-        <img src='https://www.pearsonhighered.com/assets/bigcovers/0/3/2/1/0321268458.jpg' width="100px" height="100px">
+        <img src="http://www.rsa.neu.edu/wp-content/uploads/blank-profile-picture.png" width="200px" height="200px">
         <p>{{pisac.ime}}<br>{{pisac.prezime}}</p>
         <span><button mat-button color='primary' (click)="loadWriterData(pisac.ime,pisac.prezime)"> View Writter</button></span>
-      </div>
-    </div>
-    <h4>Biblioteke</h4>
-    <div class='pisciDiv'>
-      <div class='single-pisac' *ngFor="let bib of data.biblioteke">
-        <img src='https://www.pearsonhighered.com/assets/bigcovers/0/3/2/1/0321268458.jpg' width="100px" height="100px">
-        <p>{{bib.ime}}<br>{{bib.grad}}</p>
-        <span><button mat-button color='primary'> Otvori Biblioteku</button></span>
       </div>
     </div>
   </div>

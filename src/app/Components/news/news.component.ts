@@ -1,25 +1,24 @@
-import { Component, OnInit } from '@angular/core';
-import {map} from 'rxjs/operators'
-import * as io from 'socket.io-client';
-import { environment } from 'src/environments/environment';
-import { Observable } from 'rxjs';
-import { WebsocketService } from 'src/app/Services/websocket-service.service';
+import { Component, OnInit } from "@angular/core";
+import { Observable } from "rxjs";
+import { WebsocketService } from "src/app/Services/websocket-service.service";
+import { AuthService } from "src/app/Services/auth/auth.service";
 @Component({
-  selector: 'app-news',
-  templateUrl: './news.component.html',
-  styleUrls: ['./news.component.css']
+  selector: "app-news",
+  templateUrl: "./news.component.html",
+  styleUrls: ["./news.component.css"]
 })
 export class NewsComponent implements OnInit {
+  public messages = [];
 
-  public messages=[];
-  constructor(private ws:WebsocketService 
-  ) { }
+  constructor(public auth: AuthService, private webS: WebsocketService) {}
 
   ngOnInit() {
-    this.ws.getMessages().subscribe(res=>{
-      console.log('odje',res)
-      // this.messages.push(res['message'])
-    })
+    this.webS.initSocket(this.auth.user.username);
+    this.initObservable();
   }
-
+  initObservable() {
+    this.webS.socketSubject.subscribe(res => {
+      this.messages.push(res);
+    });
+  }
 }

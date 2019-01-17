@@ -1,10 +1,7 @@
-.knjigee{
+.info{
     width: 80%;
-    margin: 0 auto;
 }
+.info,.info h1{
 
-.single-one{
-    float: left;
-    width: 200px;
-    flex-direction: row;
+    margin:0 auto;
 }

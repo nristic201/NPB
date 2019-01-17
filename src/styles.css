@@ -1,9 +1,30 @@
 /* You can add global styles to this file, and also import other style files */
 
 @import "~@angular/material/prebuilt-themes/deeppurple-amber.css";
+@import '~ngx-toastr/toastr.css';
+ 
+
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .spacer {
     flex: 1 1 auto;
  }
+
+.single-book,.single-pisac,.single-user{
+    float: left;
+    width: 200px;
+    flex-direction: row;
+    flex-flow: wrap;
+    margin: 2%;
+}
+.book_thumb{
+    width: 200px;
+    height: 200px;
+}
+.booksDiv,.pisciDiv,.usersDiv{
+    width: 100%;
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: wrap;
+}

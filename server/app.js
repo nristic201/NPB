@@ -444,30 +444,36 @@ app.post('/biblioteka/oslobodi', function (req, res) { //biblioteka/iznajmi?id_k
 		.catch();
 });
 
-app.get('/knjiga/oceni', function (req, res) { //knjiga/oceni?ocena=5&knjiga=naziv&izdanje=izdanje
+app.post('/knjiga/oceni', function (req, res) { //knjiga/oceni?ocena=5&knjiga=naziv&izdanje=izdanje
 
-	let ocena = req.query.ocena;
-	let naziv = req.query.naziv;
-	let izdanje = req.query.izdanje;
+	let isbn = req.body.isbn;
+	let ocena = req.body.ocena;
+	let username = req.body.username;
 
 	let sum = 0;
 	let num = 0;
 
 	session
-		.run("match (k:Knjiga {naziv: {nazivParam}, izdanje: {izdanjeParam}}), (n:Korisnik {username: usernameParam}) merge (k)<-[:Ocenio]-(n)")
+		.run("match (k:Knjiga {ISBN: {isbnParam}}), (n:Korisnik {username: usernameParam}) merge (k)<-[:Ocenio {ocena: {ocenaParam}}]-(n)",
+				{isbnParam:isbn, usernameParam: username, ocenaParam: ocena})
 		.then(result => {
 			session
-				.run("match (k:Knjiga {naziv: {nazivParam}, izdanje: {izdanjeParam}})-[o:Ocenio]-(p:Korisnik) return o")
+				.run("match (k:Knjiga {ISBN: {isbnParam}})-[o:Ocenio]-(p:Korisnik) return o")
+				.then(parser.parse)
 				.then(result => {
-					result.records.forEach(record => {
-						sum += record._fields[0].properties.ocena;
+					result.forEach(record => {
+						sum += record.ocena;
 						num++;
 					})
 					let prosecna = sum / num;
 
 					session
-						.run("match (k:Knjiga {naziv: {nazivParam}, izdanje: {izdanjeParam}}) set k.ocena = {prosecnaParam} return k")
-						.then()
+						.run("match (k:Knjiga {ISBN: {isbnParam}}) set k.ocena = {prosecnaParam} return k",
+								{posecnaParam: prosecna})
+						.then(parser.parse)
+						.then(result => {
+							console.log(result)
+						})
 						.catch(err => console.log(err))
 				})
 				.catch(err => console.log(err))
