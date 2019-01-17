@@ -1,16 +1,17 @@
-<div class="profileContent" >
+<div class="profileContent">
   <h2>{{user.ime}} {{user.prezime}}</h2>
   <div class="profileCard">
-    <img class="profileImage" src="https://material.angular.io/assets/img/examples/shiba2.jpg" alt="Photo of a Shiba Inu" width='200px' height='200px'>
+    <img class="profileImage" src="https://material.angular.io/assets/img/examples/shiba2.jpg" alt="Photo of a Shiba Inu"
+      width='200px' height='200px'>
   </div>
   <hr>
   <h4>Iznajmljenje Knjige</h4>
   <div class='booksDiv'>
-      <div class="book" *ngFor="let item of user.iznajmljene_knjige">
-        <h5> {{item.naziv}}</h5>
-        <img src='{{item.urlSlike}}' class="book_thumb">
-        <button mat-button (click)="vratiKnjigu(item.ISBN)"> vrati</button>
-      </div>
+    <div class="book" *ngFor="let item of user.iznajmljene_knjige">
+      <h5> {{item.naziv}}</h5>
+      <img src='{{item.urlSlike}}' class="book_thumb">
+      <button mat-button (click)="vratiKnjigu(item.ISBN)"> vrati</button>
+    </div>
   </div>
   <h4>Knjige Koje Sam Ocenio</h4>
   <div class='booksDiv'>
@@ -18,11 +19,11 @@
       <h5> {{item.naziv}}</h5>
       <img src='{{item.urlSlike}}' class="book_thumb">
     </div>
-</div>
+  </div>
 
   <h4> Moji Prijatelji</h4>
   <div class='usersDiv'>
-    <div *ngFor='let friend of user.prijatelji' class="myFriend" >
+    <div *ngFor='let friend of user.prijatelji' class="myFriend">
       <img src="http://www.rsa.neu.edu/wp-content/uploads/blank-profile-picture.png" width="100px" height="100px">
       <h3>{{friend.ime}}</h3>
       <h3> {{friend.prezime}}</h3>
